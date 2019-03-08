@@ -47,7 +47,7 @@ class Payment2Controller extends Controller
             $grand_total_payment = 0;
 
             $msg = 'No hay pagos registrados hasta el momento.';
-            $rowsPerPage = 2;
+            $rowsPerPage = 50;
             $offset = 0;
             $total_pages = 1;
             $total = 0;
@@ -125,7 +125,7 @@ class Payment2Controller extends Controller
     {
         try {
             $data = $this->request->all();
-            $this->res['data'] = $data;
+            //$this->res['data'] = $data;
 
             $stock_product = ''; // HAY STOCK
 
@@ -152,6 +152,14 @@ class Payment2Controller extends Controller
                 $payment->exchange          = $data['exchange'];
                 $payment->total_service     = $data['total_service'];
                 $payment->total_product     = $data['total_product'];
+
+                if($data['fill_type'] == 0){
+                    $payment->name          = $data['client']['name'];
+                    $payment->date          = $data['client']['date'];
+                    $payment->init_slot     = $data['client']['init_slot'];
+                    $payment->final_slot    = $data['client']['final_slot'];
+                }
+
                 $payment->save();
 
                 if(count($data['service_list']) > 0){

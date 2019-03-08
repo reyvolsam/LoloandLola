@@ -372,6 +372,7 @@ function index_init($http){
         }
 
         if(vm.success_validation){
+            console.log(vm.payment)
             $http.post('payment2/charge', vm.payment)
             .success(res => {
                 console.log(res)
