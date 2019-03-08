@@ -53,11 +53,14 @@
                             <tbody ng-repeat = "payment in vm.list.list" ng-init = "cont = $index">
                                 <tr>
                                     <td>@{{ payment.id }}</td>
-                                    <td>@{{ payment.user_slot.name }}</td>
-                                    <td>@{{ payment.user_slot.date }}</td>
-                                    <td>@{{ payment.user_slot.init_slot }} - @{{ payment.user_slot.final_slot }}</td>
+                                    <td ng-if = "payment.user_slot_id != null">@{{ payment.user_slot.name }}</td>
+                                    <td ng-if = "payment.user_slot_id != null">@{{ payment.user_slot.date }}</td>
+                                    <td ng-if = "payment.user_slot_id != null">@{{ payment.user_slot.init_slot }} - @{{ payment.user_slot.final_slot }}</td>
+                                    <td ng-if = "payment.user_slot_id == null">@{{ payment.name }}</td>
+                                    <td ng-if = "payment.user_slot_id == null">@{{ payment.date }}</td>
+                                    <td ng-if = "payment.user_slot_id == null">@{{ payment.init_slot }} - @{{ payment.final_slot }}</td>
                                     <td>@{{ payment.payment_type.name }}</td>
-                                    <td>@{{ payment.total | currency }}</td>
+                                    <td>@{{ payment.subtotal | currency }}</td>
                                     <td>@{{ payment.discount.name }}</td>
                                     <td>@{{ payment.grand_total | currency }}</td>
                                     <td>@{{ payment.created_at }}</td>
@@ -71,12 +74,13 @@
                     </div><!--/tale-responsive -->
                 </div><!--/row-->
 
-                
-                <nav ng-if = "vm.list.loader == false" aria-label="Page navigation example">
-                    <ul class = "pagination justify-content-center">
-                    <li ng-class = "n.style" ng-repeat = "n in vm.list.paginator_list" ng-click = "vm.list.page = $index+1; vm.GetPayments();"><a class="page-link" href="#">@{{ n.number }}</a></li>
-                    </ul>
-                </nav>
+                <div ng-if = "vm.list.paginator_list.length > 1">
+                    <nav ng-if = "vm.list.loader == false" aria-label="Page navigation example">
+                        <ul class = "pagination justify-content-center">
+                        <li ng-class = "n.style" ng-repeat = "n in vm.list.paginator_list" ng-click = "vm.list.page = $index+1; vm.GetPayments();"><a class="page-link" href="#">@{{ n.number }}</a></li>
+                        </ul>
+                    </nav>
+                </div>
                 
 
             </div><!--/card-body-->
