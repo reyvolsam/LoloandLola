@@ -459,22 +459,16 @@ class DatingController extends Controller
             $data['user']['name'] = null;
             $data['user']['phone'] = null;
 
-            if(\Auth::check()){
-                $r = $this->SaveCitaRegistered($data);
-                if($r){
-                    $this->res['status'] = true;
-                    $this->res['msg'] = 'Cita Agendada Correctamente.';
-                }
-            } else {
-                $data['name'] = $this->request->input('name');
-                $data['phone'] = $this->request->input('phone');
 
-                $r = $this->SaveCitaPublic($data);
-                if($r){
-                    $this->res['status'] = true;
-                    $this->res['msg'] = 'Cita Agendada Correctamente.';
-                }
+            $data['name'] = $this->request->input('name');
+            $data['phone'] = $this->request->input('phone');
+
+            $r = $this->SaveCitaPublic($data);
+            if($r){
+                $this->res['status'] = true;
+                $this->res['msg'] = 'Cita Agendada Correctamente.';
             }
+
         } catch(\Exception $e) {
             $this->res['msg'] = 'Error en el sistema.';
         }
@@ -503,7 +497,7 @@ class DatingController extends Controller
         try {
             $data['user']['id'] = null;
             $data['user']['name'] = $data['name'];
-            $data['user']['name'] = $data['phone'];
+            $data['user']['phone'] = $data['phone'];
             
             $r = $this->StoreCita($data);
             if($r){

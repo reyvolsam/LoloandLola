@@ -360,9 +360,10 @@ function index_init($http){
 
         vm.success_validation = true // Validation success
 
-        if(vm.payment.client.name.length ==  0 || vm.payment.client.init_slot.length == 0 || vm.payment.client.final_slot.length == 0 || vm.payment.client.date.length == 0){
-            vm.success_validation = false
-            msg = 'La información del cliente esta vacia.'
+        if(vm.payment.client.name.length == 0 || vm.payment.client.date.length == 0){
+            vm.success_validation = false;
+            (vm.payment.client.name.length == 0) ? msg = 'El nombre del cliente esta vacio.' : false;
+            (vm.payment.client.date.length == 0) ? msg = 'La fecha de la cita esta vacia.' : false;
         }
 
         if(vm.payment.service_list.length == 0 && vm.payment.product_list.length == 0){
