@@ -21,7 +21,7 @@
                     <button ng-if = "vm.payment.fill_type == 0" class = "btn btn-secondary" ng-click = "vm.SwitchClientFill()"> <i class = "fa fa-user"></i> Seleccionar cliente</button>
                     <button ng-if = "vm.payment.fill_type == 1" class = "btn btn-secondary" ng-click = "vm.SwitchClientFill()"> <i class = "fa fa-user"></i> Llenar información del cliente</button>
 
-                    <div class = "form-group">
+                    <div ng-if = "vm.payment.fill_type == 1" class = "form-group">
                         <label for = "cita_date">Fecha</label>
                         <div class = "input-group">
                             <input ng-disabled = "vm.cita_date.disabled" type = "text" class = "form-control" id = "cita_date" uib-datepicker-popup ng-model = "vm.cita.date" is-open = "vm.date_control.opened" datepicker-options = "vm.date_control" ng-required = "true" close-text = "Cerrar" placeholder = "Seleccione una fecha" ng-change = "vm.GetCitasByDate()" />
@@ -34,13 +34,14 @@
                             </span><!--/input-group-btn-->
                         </div><!--/input-group-->
                     </div><!--/form-group-->
+                    <p ng-if = "vm.payment.fill_type == 0"><b>Campos Requeridos <span class="text-danger">*</span></b></p>
 
                     <div class = "form-group">
-                        <label for = "client_name">Nombre del cliente</label>
+                        <label for = "client_name">Nombre del cliente<span ng-if = "vm.payment.fill_type == 0" class="text-danger">*</span></label>
                         <input ng-disabled = "vm.client_name.disabled" type = "text" class = "form-control" id = "client_name" aria-describedby = "client_name" placeholder = "Nombre del cliente" ng-model = "vm.payment.client.name" disabled = "disabled" />
                     </div><!--/form-group-->
                     <div class="form-group">
-                        <label for = "date">Fecha de la cita</label>
+                        <label for = "date">Fecha de la cita<span ng-if = "vm.payment.fill_type == 0" class="text-danger">*</span></label>
                         <input ng-disabled = "vm.client_date.disabled" type = "text" class = "form-control" id = "date" aria-describedby = "date" placeholder = "Fecha de la cita" ng-model = "vm.payment.client.date" disabled = "disabled" />
                     </div><!--/form-group-->
                     <div class="form-group" ng-if = "vm.payment.fill_type == 1">
