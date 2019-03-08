@@ -363,6 +363,59 @@ class DatingController extends Controller
         return response()->json($this->res);
     }//GetCitas()
 
+    public function GetPublicCitas()
+    {
+        try{
+            $day = $this->request->input('day');
+            $date = $this->request->input('date');
+
+            $exception = DateException::where('date', $date)->count();
+
+            if($exception == 0){
+                $day_id = null;
+
+                if($day == 1) $day_id = 1;
+                if($day == 2) $day_id = 2;
+                if($day == 3) $day_id = 3;
+                if($day == 4) $day_id = 4;
+                if($day == 5) $day_id = 5;
+                if($day == 6) $day_id = 6;
+                if($day == 0) $day_id = 7;
+
+                $day_slots = DaysSlots::where('day_id', $day_id)->get();
+
+                $users_slots = UsersSlots::where('date', $date)->get();
+
+                foreach ($day_slots as $kdus => $vdus) {
+                    $vdus->exist_cita = false;
+                    $vdus->selected = false;
+                }
+                if(count($users_slots) > 0){
+                    foreach ($users_slots as $kus => $vus) {
+                        foreach ($day_slots as $kdus => $vdus) {
+                            if($vus->day_slot_id == $vdus->id){
+                                $vdus->exist_cita = true;// SI HAY UNA CITA REGISTRADA
+                                $vdus->client_name  = $vus->name;
+                                $vdus->user_slot_id = $vus->id;
+                                $vdus->phone        = null;
+                                $vdus->date        = $vus->date;
+                            }
+                        }
+                    }
+                }
+
+                $this->res['day'] = $day;
+                $this->res['data'] = $day_slots;
+                $this->res['status'] = true;
+            } else {
+                $this->res['msg'] = 'Este día no hay citas.';
+            }
+        } catch(\Exception $e) {
+            $this->res['msg'] = 'Error en el sistema.'.$e;
+        }
+        return response()->json($this->res);
+    }//GetPublicCitas()
+
     public function SaveCita()
     {
         try {
@@ -390,6 +443,44 @@ class DatingController extends Controller
         return response()->json($this->res);
     }//SaveCita()
 
+    public function SavePublicCita()
+    {
+        try {
+            $data['date']       = $this->request->input('date');
+            $data['day_id']     = $this->request->input('day_id');
+            $data['id']         = $this->request->input('id');
+            $data['init_slot']  = $this->request->input('init_slot');
+            $data['final_slot'] = $this->request->input('final_slot');
+
+            $data['name'] = $this->request->input('name');
+            $data['phone'] = $this->request->input('phone');
+
+            $data['user']['id'] = null;
+            $data['user']['name'] = null;
+            $data['user']['phone'] = null;
+
+            if(\Auth::check()){
+                $r = $this->SaveCitaRegistered($data);
+                if($r){
+                    $this->res['status'] = true;
+                    $this->res['msg'] = 'Cita Agendada Correctamente.';
+                }
+            } else {
+                $data['name'] = $this->request->input('name');
+                $data['phone'] = $this->request->input('phone');
+
+                $r = $this->SaveCitaPublic($data);
+                if($r){
+                    $this->res['status'] = true;
+                    $this->res['msg'] = 'Cita Agendada Correctamente.';
+                }
+            }
+        } catch(\Exception $e) {
+            $this->res['msg'] = 'Error en el sistema.';
+        }
+        return response()->json($this->res);
+    }//SavePublicCita()
+
     private function SaveCitaRegistered($data)
     {
         try {
@@ -406,6 +497,24 @@ class DatingController extends Controller
             return false;
         }
     }//SaveCita()
+
+    private function SaveCitaPublic($data)
+    {
+        try {
+            $data['user']['id'] = null;
+            $data['user']['name'] = $data['name'];
+            $data['user']['name'] = $data['phone'];
+            
+            $r = $this->StoreCita($data);
+            if($r){
+                return true;
+            } else {
+                return false;
+            }
+        } catch(\Excpetion $e) {
+            return false;
+        }
+    }//SaveCitaPublic()
 
     private function StoreCita($data)
     {

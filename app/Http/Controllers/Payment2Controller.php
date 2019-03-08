@@ -69,9 +69,6 @@ class Payment2Controller extends Controller
                 $init_date = $date." 00:00:00";
                 $final_date = date("Y-m-d",strtotime($date."+ 1 days"))." 00:00:00";
 
-                /*$grand_total_payment = Payment::whereBetween('created_at', [$init_date, $final_date])
-                                                ->sum('grand_total');*/
-
                 $payment_list = $payment_list->whereBetween('created_at', [$init_date, $final_date]);
 
                 $msg = "No hay pagos registrados en la feha indicada.";

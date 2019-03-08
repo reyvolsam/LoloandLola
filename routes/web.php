@@ -28,6 +28,8 @@ Route::get('index', function () {
 });
 
 Route::get('citas/publico', 'DatingController@MakeDatingIndexPublic');
+Route::post('citas/get_public_citas', 'DatingController@GetPublicCitas');
+Route::post('citas/save_public_cita', 'DatingController@SavePublicCita');
 
 Route::group(['middleware'=> 'loginIn'], function () {
 
@@ -68,3 +70,4 @@ Route::group(['middleware'=> 'loginIn'], function () {
 
 	//Route::resource('payment2', 'Payment2Controller');
 });
+
