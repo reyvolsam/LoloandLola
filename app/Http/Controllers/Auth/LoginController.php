@@ -81,6 +81,7 @@ class LoginController extends Controller
                     if($actusr){
                         if(Auth::attempt(['email' => $this->request->input('email'), 'password' =>  $this->request->input('passwd')])) {
                             $this->res['status'] = true;
+                            $this->res['profile_id'] = \Auth::getUser()->group_id;
                         } else {
                             $this->res['msg'] .= 'El correo electronico o la contraseña estan incorrectos.';
                         }

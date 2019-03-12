@@ -62,7 +62,7 @@ class UserController extends Controller
                 $this->res['status'] = true;
             } else {
                 $this->res['total'] = 0;
-                $this->res['msg'] = $msgu;
+                $this->res['msg'] = 'No hay clientes regitrados hasta el momento.';
             }
         } catch(\Exception $e) {
             $this->res['msg'] = 'Error en la Base de Datos.'.$e;

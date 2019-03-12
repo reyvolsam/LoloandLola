@@ -14,7 +14,12 @@ function login_init($http){
             .success(function(res){
                 console.log(res);
                 if(res.status){
-                    window.location = 'index';
+                    if(res.profile_id == 3){
+                        window.location = 'payment2';
+                    } else {
+                        window.location = 'index';
+                    }
+                    
                 } else {
                     vm.loader = false;
                     swal("¡Atención!", res.msg, "warning");
