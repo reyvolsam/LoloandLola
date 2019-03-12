@@ -14,7 +14,7 @@ function login_init($http){
             .success(function(res){
                 console.log(res);
                 if(res.status){
-                    if(res.profile_id == 3){
+                    if(res.profile_id == 2 || res.profile_id == 3){
                         window.location = 'payment2';
                     } else {
                         window.location = 'index';
