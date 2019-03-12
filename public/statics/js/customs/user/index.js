@@ -3,6 +3,8 @@ angular.module('app', []).controller('appCtrl', ['$http', user_init]);
 function user_init($http){
     var vm = this
 
+    vm.label_module = label_module
+
     vm.user = {}
     vm.user.list = {}
     vm.user.loader = false
@@ -18,7 +20,7 @@ function user_init($http){
     {
         vm.user.modal = {
             loader: false,
-            title: 'Crear Usuario',
+            title: 'Crear '+vm.label_module,
             first_name: '',
             last_name: '',
             email: '',
@@ -56,6 +58,9 @@ function user_init($http){
     vm.SaveUser = function ()
     {
         vm.user.modal.loader = true
+
+        if(vm.label_module == 'Cliente') vm.user.modal.group_id = 4
+
         console.log(vm.user.modal)
         $http.post('user', vm.user.modal)
         .success(res => {

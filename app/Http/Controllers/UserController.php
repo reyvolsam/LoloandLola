@@ -42,6 +42,10 @@ class UserController extends Controller
                 $users = $users->where('group_id', '!=', 1);
             }
 
+            if(\Auth::getUser()->group_id == 3){
+                $users = $users->where('group_id', '=', 4);
+            }
+
             $users = $users->orderBy('id', 'DESC')->get();
 
             if( count($users) > 0 ){
@@ -103,6 +107,7 @@ class UserController extends Controller
             $data['email']          = $this->request->input('email');
             $data['group_id']       = $this->request->input('group_id');
             $data['active']         = $this->request->input('active');
+
 
             if (!$validator->fails()) {
                 if($id == null){
