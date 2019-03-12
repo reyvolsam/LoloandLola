@@ -38,19 +38,30 @@
 		</div><!--/logotipo-->
 		<ul>
 			<li><a href="{{ URL::to('/') }}"><i class="fa fa-home"></i> Escritorio</a> </li>
-			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2)
-			<li><a href="{{ URL::to('user') }}"><i class="fa fa-users"></i> Usuarios</a> </li>
+			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3)
+			<li><a href="{{ URL::to('user') }}"><i class="fa fa-users"></i> 
+				@if(\Auth::getUser()->group_id == 3)
+				Clientes
+				@else
+				Usuarios
+				@endif
+				</a> 
+			</li>				
 			<li><a href="{{ URL::to('service') }}"><i class="fa fa-briefcase"></i> Servicios</a> </li>
 			<li><a href="{{ URL::to('product') }}"><i class="fa fa-heart"></i> Productos</a> </li>
+			@endif
+			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2)
 			<li><a href="{{ URL::to('dating') }}"><i class="fa fa-calendar"></i>Gestión de Citas</a> </li>
 			@endif
 			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3 || \Auth::getUser()->group_id == 4)
 			<li><a href="{{ URL::to('citas') }}"><i class="fa fa-clock-o"></i>Agendar Cita</a> </li>
 			@endif
 			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3)
-			<li><a href="{{ URL::to('citas/list') }}"><i class="fa fa-calendar-o"></i>Citas</a> </li>
+			<li><a href="{{ URL::to('citas/list') }}"><i class="fa fa-calendar-o"></i>Ver Citas</a> </li>
 			<li><a href="{{ URL::to('payment2') }}"><i class="fa fa-credit-card"></i>Pagar</a> </li>
+			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2)
 			<li><a href="{{ URL::to('payment2/list') }}"><i class="fa fa-database"></i>Historial</a> </li>
+			@endif
 			@endif
 		</ul>
 	</div><!--/sidenav-->

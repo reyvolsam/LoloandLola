@@ -2,13 +2,23 @@
 
 @section('js')
   <script type="text/javascript" src="{{ asset('statics/js/customs/user/index.js') }}"></script>
+  <script>
+      @if(\Auth::getUser()->group_id == 3)
+      var label_module = 'Cliente';
+      @else
+      var label_module = 'Usuario'
+      @endif
+  </script>
 @stop
 
 @section('content')
 <div class = "row">
     <div class ="col-sm-12 col-md-6"></div>
     <div class = "col-sm-12 col-md-6 t_right">
-        <button type = "button" class = "btn btn_dpilady" ng-click = "vm.OpenModalUsers();"><i class = "fa fa-plus"></i> Crear Usuario</button>
+        <button type = "button" class = "btn btn_dpilady" ng-click = "vm.OpenModalUsers();">
+            <i class = "fa fa-plus"></i>			
+             Crear @{{vm.label_module}}
+            </button>
         <br />
         <br />
     </div><!--/col-sm-12-->
@@ -18,7 +28,9 @@
     <div class="col-md-12" ng-init = "vm.GetUsersList()">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title t_left">Usuarios</h4>
+                <h4 class="card-title t_left">
+                    @{{vm.label_module}}
+                </h4>
 
                 <div class="table-responsive">
                     <table class="table table-hover" ng-if = "vm.user.loader == false">
@@ -67,15 +79,17 @@
                             <input ng-disabled = "vm.user.modal.loader" type = "text" class = "form-control" id = "last_name" name = "last_name" ng-model = "vm.user.modal.last_name" placeholder = "Apellidos" />
                         </div><!--/form-group-->
                         <div class = "form-group">
-                                <label for = "email">Correo Electrónico</label>
-                                <input ng-disabled = "vm.user.modal.loader" type = "email" class = "form-control" id = "email" name = "email" ng-model = "vm.user.modal.email" placeholder = "Correo Electrónico" />
-                            </div><!--/form-group-->
+                            <label for = "email">Correo Electrónico</label>
+                            <input ng-disabled = "vm.user.modal.loader" type = "email" class = "form-control" id = "email" name = "email" ng-model = "vm.user.modal.email" placeholder = "Correo Electrónico" />
+                        </div><!--/form-group-->
+                        @if(\Auth::getUser()->group_id != 3)
                         <div class = "form-group">
                             <label for = "profile">Perfil</label>
                             <select ng-disabled = "vm.user.modal.loader" class = "form-control" id = "profile" name = "profile" ng-model = "vm.user.modal.group_id" ng-options = "p_list.id as p_list.alias for p_list in vm.profiles_list">
                                 <option value = "">Elije un perfil...</option>
                             </select>
                         </div><!--/form-group-->
+                        @endif
                         <div class = "form-group">
                             <div class = "custom-control custom-switch">
                                 <input ng-disabled = "vm.user.modal.loader" type = "checkbox" class = "custom-control-input" id = "customSwitch1" ng-model = "vm.user.modal.active" />
@@ -86,7 +100,7 @@
                     </div><!--/modal-body-->
                     <div class = "modal-footer">
                         <button ng-if = "vm.user.modal.loader == false" type = "button" class = "btn btn-secondary" ng-click = "vm.CancelUserModal()">Cancelar</button>
-                        <button ng-if = "vm.user.modal.loader == false" type = "submit" class = "btn btn-primary verde">Guardar Usuario</button>
+                    <button ng-if = "vm.user.modal.loader == false" type = "submit" class = "btn btn-primary verde">Guardar @{{vm.label_module}}</button>
                         <i ng-if = "vm.user.modal.loader == true" class = "fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i>
                     </div><!--/modal-footer-->
                 </form>
