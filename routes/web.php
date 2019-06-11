@@ -27,9 +27,10 @@ Route::get('index', function () {
 	}
 });
 
-Route::get('citas/publico', 'DatingController@MakeDatingIndexPublic');
-Route::post('citas/get_public_citas', 'DatingController@GetPublicCitas');
-Route::post('citas/save_public_cita', 'DatingController@SavePublicCita');
+Route::get('payment2/ticket/{folio}', 'Payment2Controller@TicketWeb');
+
+Route::get('email/resp', 'Payment2Controller@resp');
+
 
 Route::group(['middleware'=> 'loginIn'], function () {
 
@@ -37,17 +38,22 @@ Route::group(['middleware'=> 'loginIn'], function () {
 		return view('index', ['request' => $request]);
 	});
 
-	Route::get('citas/list', 'DatingController@CitasListView');
-	Route::post('citas/save_cita', 'DatingController@SaveCita');
-	Route::post('citas/get_citas', 'DatingController@GetCitas');
-	Route::get('citas', 'DatingController@MakeDatingIndex');
-	
-	Route::post('dating/delete_exception_date', 'DatingController@DeleteExceptionDate');
-	Route::post('dating/add_exception', 'DatingController@AddException');
-	Route::post('dating/delete_slot', 'DatingController@DeleteSlot');
-	Route::post('dating/get_schedules', 'DatingController@GetSchedules');
-	Route::post('dating/list', 'DatingController@list');
-	Route::resource('dating', 'DatingController');
+	Route::get('email', function (){
+
+		try{
+			Mail::send('emails.test', [],function($message){
+				$message->from('no-reply@lololola.com.mx', 'SRE');
+				$message->to(['samuel43_7@hotmail.com'])->subject('SRE');
+			});
+			
+			echo "OK";
+		} catch (\Excpetion $e){
+			echo $e;
+		}
+
+
+	});
+
 
 	Route::post('user/list', 'UserController@lists');
 	Route::post('user/search', 'UserController@search');
@@ -62,6 +68,9 @@ Route::group(['middleware'=> 'loginIn'], function () {
 	Route::post('service/list', 'ServiceController@lists');
 	Route::resource('service', 'ServiceController');
 
+	
+	
+	Route::post('payment2/upload_designs', 'Payment2Controller@UploadDesigns');
 	Route::post('payment2/get_payment_list', 'Payment2Controller@GetPaymentList');
 	Route::post('payment2/charge', 'Payment2Controller@MakeCharge');
 	Route::post('payment2/get_client', 'Payment2Controller@GetClient');
@@ -69,5 +78,6 @@ Route::group(['middleware'=> 'loginIn'], function () {
 	Route::resource('payment2', 'Payment2Controller');
 
 	//Route::resource('payment2', 'Payment2Controller');
+
 });
 

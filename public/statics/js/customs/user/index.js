@@ -9,6 +9,13 @@ function user_init($http){
     vm.user.list = {}
     vm.user.loader = false
 
+    vm.user.password_modal = {
+        id: null,
+        password: '',
+        password_confirm: '',
+        loader: false
+    }
+
     vm.profiles_list = [
         {id: 1, alias: 'root'}, 
         {id: 2, alias: 'Administrador'}, 
@@ -21,6 +28,7 @@ function user_init($http){
         vm.user.modal = {
             loader: false,
             title: 'Crear '+vm.label_module,
+            phone: '',
             first_name: '',
             last_name: '',
             email: '',
@@ -29,7 +37,7 @@ function user_init($http){
         }
     }//ResetUser
 
-    vm.GetUsersList = () =>
+    vm.GetUsersList = _ =>
     {
         vm.ResetUser()
 
@@ -50,18 +58,17 @@ function user_init($http){
         });
     }//vm.GetUsersList()
 
-    vm.OpenModalUsers = function()
+    vm.OpenModalUsers = _ =>
     {
         $('#create_user_modal').modal('show')
     }//vm.OpenModalUsers
 
-    vm.SaveUser = function ()
+    vm.SaveUser = _ =>
     {
         vm.user.modal.loader = true
 
         if(vm.label_module == 'Cliente') vm.user.modal.group_id = 4
 
-        console.log(vm.user.modal)
         $http.post('user', vm.user.modal)
         .success(res => {
             console.log(res)
@@ -81,27 +88,26 @@ function user_init($http){
         });
     }//vm.SaveUser
 
-    vm.EditUser = function (user)
+    vm.EditUser =  user =>
     {
-        console.log(user)
         vm.user.modal.title = 'Editar Usuario'
         vm.user.modal.id = user.id
         vm.user.modal.first_name = user.first_name
         vm.user.modal.last_name = user.last_name
         vm.user.modal.email = user.email
+        vm.user.modal.phone = user.phone
         vm.user.modal.group_id = user.group.id
         vm.user.modal.active = (user.active) ? true : false
         $('#create_user_modal').modal('show')
     }//vm.EditUser
 
-    vm.CancelUserModal = function ()
+    vm.CancelUserModal = _ => 
     {
         vm.ResetUser()
         $('#create_user_modal').modal('toggle')
     }//vm.CancelUserModal
 
-
-    vm.DeleteUser = function (elem)
+    vm.DeleteUser = elem => 
     {
         swal({
             title: "",
@@ -134,4 +140,49 @@ function user_init($http){
         })
     }//vm.DeleteUsers
 
+    vm.OpenUpdatePasswordModal = user =>
+    {
+        vm.user.password_modal.id = user.id
+        $('#update_password_modal').modal('toggle')
+        console.log('user', user)
+    }//vm.UpdatePassword
+
+    vm.UpdateUserPassword = _ =>
+    {
+        vm.user.password_modal.loader = true
+        console.log('vm.user.password_modal', vm.user.password_modal)
+        $http.post('user/reset_password', vm.user.password_modal)
+        .success(res =>{
+            console.log(res)
+            vm.user.password_modal.loader = false
+            if(res.status){
+                vm.user.password_modal = {
+                    id: null,
+                    password: '',
+                    password_confirm: '',
+                    loader: false
+                }
+                $('#update_password_modal').modal('toggle')
+                swal('¡Éxito!', res.msg, 'success')
+            } else {
+                swal('¡Atención!', res.msg, 'warning')
+            }
+        }).error(res => {
+            vm.user.password_modal.loader = false
+            console.log(res)
+            swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
+
+        })
+    }//vm.UpdateUserPassword
+
+    vm.CancelPasswordModal = _ =>
+    {
+        vm.user.password_modal = {
+            id: null,
+            password: '',
+            password_confirm: '',
+            loader: false
+        }
+        $('#update_password_modal').modal('toggle')
+    }//vm.CancelPasswordModal
 }//index_init

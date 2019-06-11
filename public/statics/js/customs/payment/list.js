@@ -12,11 +12,12 @@ function index_init($http){
         paginator_list: []
     }
 
+    vm.delivery_date = ''
     vm.service_list = {}
     vm.product_list = {}
 
-    vm.cita = {}
-    vm.cita.date = null
+    vm.date_init = null
+    vm.date_final = null
     
     vm.date_control = {
         dateDisabled: false,
@@ -25,20 +26,41 @@ function index_init($http){
         opened: false
     }
 
-    sessionStorage.removeItem("user_slot_id")
+    vm.control_init = {
+        dateDisabled: false,
+        formatYear: 'yyyy',
+        startingDay: 1,
+        opened: false
+    }
+
+    vm.control_final = {
+        dateDisabled: false,
+        formatYear: 'yyyy',
+        startingDay: 1,
+        opened: false
+    }
+
+    vm.design_image = '#'
 
     vm.GetPayments = _ =>
     {
         vm.list.loader = true
-        let final_date = null
-        if(vm.cita.date != null){
-            let dd = vm.cita.date
-            final_date = dd.getFullYear()+'-'+('0'+(dd.getMonth()+1)).slice(-2)+'-'+('0'+dd.getDate()).slice(-2)
+        let final_date_init = null
+        let final_date_final = null
+
+        if(vm.date_init != null && vm.date_final != null){
+            let dd1 = vm.date_init
+            let dd2 = vm.date_final
+            final_date_init = dd1.getFullYear()+'-'+('0'+(dd1.getMonth()+1)).slice(-2)+'-'+('0'+dd1.getDate()).slice(-2)
+            final_date_final = dd2.getFullYear()+'-'+('0'+(dd2.getMonth()+1)).slice(-2)+'-'+('0'+dd2.getDate()).slice(-2)
         }
         vm.list.list = {}
-        console.log('vm.list.page', vm.list.page)
-        $http.post('get_payment_list', {page: vm.list.page, date: final_date})
-        .success(res =>{
+        $http.post('get_payment_list', 
+        {
+            page: vm.list.page, 
+            date_init: final_date_init, 
+            date_final: final_date_final
+        }).success(res =>{
             console.log(res)
             vm.list.loader = false
             if(res.status){
@@ -58,6 +80,7 @@ function index_init($http){
 
     vm.OpenServiceModal = ind =>
     {
+        vm.delivery_date = vm.list.list[ind].delivery_date 
         vm.service_list = {}
         vm.product_list = {}
         $('#service_list_modal').modal('toggle')
@@ -85,4 +108,16 @@ function index_init($http){
         console.log('vm.list.paginator_list', vm.list.paginator_list)
     }//vm.BuildPaginatorArray
     
+    vm.OpenDesignImageModal = ind =>
+    {
+        console.log('vm.list.list', vm.list.list[ind])
+        vm.design_image = vm.list.list[ind].design_image
+        $('#payment_image_modal').modal('toggle')
+    }//vm.OpenDesignImageModal
+
+    vm.CloseDesignImage = _ =>
+    {
+        $('#payment_image_modal').modal('toggle')
+    }//vm.CloseDesignImage
+
 }////

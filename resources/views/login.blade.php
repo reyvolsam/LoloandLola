@@ -7,17 +7,17 @@
 
 	<!-- compatilibdad con webapp iOS -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-title" content="Dpilady">
+	<meta name="apple-mobile-web-app-title" content="Lolo & Lola Boutique">
 	<link rel="apple-touch-icon"  href="{{asset('statics/favicon/logo_dpilady_mini.png') }}">
 
 	<!-- compatilibdad con webapp Android -->
 	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="theme-color" content="#da4469">
-	<meta name="application-name" content="Dpilady">
+	<meta name="theme-color" content="##2c1b19">
+	<meta name="application-name" content="Lolo & Lola Boutique">
 	<link rel="icon" type="image/png" href="{{ asset('statics/favicon/logo_dpilady_mini.png') }}">
 
-	<title>Dpilady ::Depilación Laser::</title>
-	<meta name="description" content="Dpilady, depilación laser y toda para tu belleza">
+	<title>Lolo & Lola Boutique ::Depilación Laser::</title>
+	<meta name="description" content="Lolo & Lola Boutique">
 	<meta name="author" description="Nextio"/>
 
 	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('statics/favicon/logo.ico') }}" />

@@ -7,23 +7,39 @@
 
 @section('content')
 <div class = "row">
-    <div class ="col-sm-12 col-md-6">
-        <div class = "col-md-5">
-            <div class = "form-group">
-                <div class = "input-group">
-                    <input type = "text" class = "form-control" id = "cita_date" uib-datepicker-popup ng-model = "vm.cita.date" is-open = "vm.date_control.opened" datepicker-options = "vm.date_control" ng-required = "true" close-text = "Cerrar" placeholder = "Seleccione una fecha" ng-change = "vm.GetPayments()" />
-                    <span class = "input-group-btn">
-                        <button type = "button" class = "btn btn-secondary" ng-click = "vm.date_control.opened = true">
-                            <i class = "fa-svg-icon">
-                                <i class = "fa fa-calendar"></i>
-                            </i>
-                        </button>
-                    </span><!--/input-group-btn-->
-                </div><!--/input-group-->
-            </div><!--/form-group-->
-        </div><!--/col-md-3-->
-    </div>
-    <div class = "col-sm-12 col-md-6 t_right">
+    <div class ="col-md-10">
+        <div class = "row">
+            <div class = "col-md-3">    
+                <div class = "form-group">
+                    <div class = "input-group">
+                        <input type = "text" class = "form-control" id = "date_init" uib-datepicker-popup ng-model = "vm.date_init" is-open = "vm.control_init.opened" datepicker-options = "vm.control_init" ng-required = "true" close-text = "Cerrar" placeholder = "Fecha inicial" ng-change = "vm.GetPayments()" />
+                        <span class = "input-group-btn">
+                            <button type = "button" class = "btn btn-secondary" ng-click = "vm.control_init.opened = true">
+                                <i class = "fa-svg-icon">
+                                    <i class = "fa fa-calendar"></i>
+                                </i>
+                            </button>
+                        </span><!--/input-group-btn-->
+                    </div><!--/input-group-->
+                </div><!--/form-group-->
+            </div><!--/col-md-5-->
+            <div class = "col-md-3">
+                <div class = "form-group">
+                    <div class = "input-group">
+                        <input type = "text" class = "form-control" id = "date_final" uib-datepicker-popup ng-model = "vm.date_final" is-open = "vm.control_final.opened" datepicker-options = "vm.control_final" ng-required = "true" close-text = "Cerrar" placeholder = "Fecha final" ng-change = "vm.GetPayments()" />
+                        <span class = "input-group-btn">
+                            <button type = "button" class = "btn btn-secondary" ng-click = "vm.control_final.opened = true">
+                                <i class = "fa-svg-icon">
+                                    <i class = "fa fa-calendar"></i>
+                                </i>
+                            </button>
+                        </span><!--/input-group-btn-->
+                    </div><!--/input-group-->
+                </div><!--/form-group-->
+            </div><!--/col-md-5-->
+        </div><!--/row-->
+    </div><!--/col-sm-12-->
+    <div class = "col-md-2 t_right">
         <a href = "{{ URL::to('payment2') }}" class = "btn btn_dpilady"><i class = "fa fa-credit-card"></i> Pagar</a>
         <br />
         <br />
@@ -39,33 +55,33 @@
                     <div class="table-responsive">
                         <table class = "table">
                             <thead>
-                                <th>Folio</th>
-                                <th>Cliente</th>
-                                <th>Fecha de Cita</th>
-                                <th>Horario</th>
-                                <th>Tipo de pago</th>
-                                <th>Subtotal</th>
-                                <th>Descuento</th>
-                                <th>Total</th>
-                                <th>Fecha de Venta</th>
+                                <th style="width:7px; font-size:15px;color: #2c1b19;">Folio</th>
+                                <th style="width:30px;font-size:15px;color: #2c1b19;">Cliente</th>
+                                <th style="font-size:15px;color: #2c1b19;">Teléfono</th>
+                                <th style="font-size:15px;color: #2c1b19;">Tipo de pago</th>
+                                <th style="font-size:15px;color: #2c1b19;">Total</th>
+                                <th style="font-size:15px;color: #2c1b19;">Anticipo</th>
+                                <th style="font-size:15px;color: #2c1b19;">Descuento</th>
+                                <th style="font-size:15px;color: #2c1b19;">Resta</th>
+                                <th style="font-size:15px;color: #2c1b19;">Fecha de Venta</th>
+							    <th style="font-size:15px;color: #2c1b19;">Fecha de Entrega</th>
                                 <th></th>
                             </thead>
                             <tbody ng-repeat = "payment in vm.list.list" ng-init = "cont = $index">
                                 <tr>
-                                    <td>@{{ payment.id }}</td>
-                                    <td ng-if = "payment.user_slot_id != null">@{{ payment.user_slot.name }}</td>
-                                    <td ng-if = "payment.user_slot_id != null">@{{ payment.user_slot.date }}</td>
-                                    <td ng-if = "payment.user_slot_id != null">@{{ payment.user_slot.init_slot }} - @{{ payment.user_slot.final_slot }}</td>
-                                    <td ng-if = "payment.user_slot_id == null">@{{ payment.name }}</td>
-                                    <td ng-if = "payment.user_slot_id == null">@{{ payment.date }}</td>
-                                    <td ng-if = "payment.user_slot_id == null">@{{ payment.init_slot }} - @{{ payment.final_slot }}</td>
+                                    <td style="width:7px;">@{{ payment.id }}</td>
+                                    <td >@{{ payment.name }}</td>
+                                    <td >@{{ payment.phone }}</td>
                                     <td>@{{ payment.payment_type.name }}</td>
                                     <td>@{{ payment.subtotal | currency }}</td>
+                                    <td>@{{ payment.advance_payment | currency }}</td>
                                     <td>@{{ payment.discount.name }}</td>
                                     <td>@{{ payment.grand_total | currency }}</td>
-                                    <td>@{{ payment.created_at }}</td>
+                                    <td style="font-size:12px;">@{{ payment.created_at }}</td>
+									<td style="font-size:16px;color: #fa9295; font-weight:600;">@{{ payment.delivery_date }}</td>
                                     <td>
-                                        <button class = "btn btn-primary btn-xs" ng-click = "vm.OpenServiceModal($index)"><i class = "fa fa-list"></i></button>
+                                        <button class = "btn btn-primary btn-xs green" ng-click = "vm.OpenServiceModal($index)"><i class = "fa fa-eye"></i></button>
+                                        <button ng-if = "payment.design_image != null" class = "btn btn-primary btn-xs" ng-click = "vm.OpenDesignImageModal($index)"><i class = "fa fa-picture-o"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -98,6 +114,16 @@
                 <h5 class = "modal-title" id = "add_service_modal_label">Lista de servicios</h5>
             </div><!--/modal-header-->
             <div class = "modal-body">
+
+                <div class = "row">
+                    <div class = "col-md-5">  
+                        <div class = "form-group">
+                            <label for = "delivery_date">Fecha de entrega</label>
+                            <input type = "text" class = "form-control" value = "@{{ vm.delivery_date }}" disabled = "disabled" />
+                        </div><!--/form-group-->
+                    </div><!--/col-md-5-->
+                </div><!--/row-->
+
                 <div class = "row">
                     <table class = "table">
                         <thead>
@@ -141,3 +167,20 @@
         </div><!--/modal-content-->
     </div><!--/moal-dialog-->
 </div><!--/add_service_modal-->
+
+<div class = "modal fade" id = "payment_image_modal" tabindex = "-1" role = "dialog" data-backdrop = "static" data-keyboard = "false">
+    <div class = "modal-dialog modal-lg" role = "document">
+        <div class = "modal-content">
+            <div class = "modal-header">
+                <h5 class = "modal-title" id = "add_service_modal_label">Diseño Personalizado</h5>
+            </div><!--/modal-header-->
+            <div class = "modal-body">
+                <img src = "{{ asset('designs_images/') }}/@{{ vm.design_image }}" alt = "Diseño Personalizado" />
+            </div><!--/modal-body-->
+            <div class = "modal-footer">
+                <button type = "button" class = "btn btn-danger" ng-click = "vm.CloseDesignImage()">Cerrar</button>
+            </div><!--/modal-footer-->
+        </div><!--/modal-content-->
+    </div><!--/modal-dialog-->
+</div><!--/modal-->
+@stop

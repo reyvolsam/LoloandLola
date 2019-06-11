@@ -1,7 +1,18 @@
-angular.module('app', ['ng-currency', 'ui.bootstrap']).controller('appCtrl', ['$http', index_init]);
+angular.module('app', ['ng-currency', 'ui.bootstrap', 'angularFileUpload']).controller('appCtrl', ['$http', 'FileUploader', index_init]);
 
-function index_init($http){
+function index_init($http, FileUploader){
     var vm = this;
+    
+    $http.defaults.headers.post['X-CSRFToken'] = $('meta[name="csrf-token"]').attr('content');
+
+    vm.delivery_date = '';
+
+    vm.delivery_date_config = {
+        dateDisabled: false,
+        formatYear: 'yyyy',
+        startingDay: 1,
+        opened: false
+    }
 
     vm.service_list = {}
     vm.discount_list = [
@@ -20,6 +31,14 @@ function index_init($http){
         {id: 13, name: '100%', discount: 100}
     ]
 
+    vm.client_name = {}
+    vm.client_name.disabled = true
+
+    vm.client = {
+        loader: false,
+        list: {}
+    }
+
     vm.payment_type_list = [
         {id: 1, name: 'Efectivo'},
         {id: 2, name: 'Transferencia'},
@@ -27,31 +46,19 @@ function index_init($http){
         {id: 4, name: 'Otro'}
     ]
 
-    vm.date_control = {
-        dateDisabled: false,
-        formatYear: 'yyyy',
-        maxDate: new Date(2020, 5, 22),
-        startingDay: 1,
-        opened: false
-    }
-
-    vm.cita = {}
-    vm.cita.loader = false
-    vm.cita.date = null
-    vm.cita.slots_list = []
-    vm.cita.selected = null
+    vm.advance_payment_list = [
+        {id: 1, name: 'Si'},
+        {id: 2, name: 'No'},
+    ]
 
     vm.payment = {
         fill_type: 1, //1 => Seleccionar cliente, 0 => Llenar manualmente
         loader: false,
-        user_slot_id: sessionStorage.getItem("user_slot_id"),
         client: {
+            id: null,
             name: '',
-            phone: '',
-            init_slot: '',
-            final_slot: '',
-            date: '',
-            schedule: ''
+            email: '',
+            phone: ''
         },
         service_loader: false,
         product_loader: false,
@@ -61,125 +68,112 @@ function index_init($http){
         product_list: [],
         total_service: 0,
         total_product: 0,
+        apply_advance_payment: 2,
+        advance_payment: 0,
+        delivery_date: '',
         subtotal: 0,
         grand_total: 0,
         payment_with: 0,
         exchange: 0
     }
 
-    vm.cita_date = { disabled: false }
+    //USER
+    vm.user = {}
+    vm.label_module = 'Cliente'
+    vm.profiles_list = [
+        {id: 4, alias: 'Cliente'}
+    ]
 
-    vm.client_name = { disabled: true }
-    vm.client_date = { disabled: true }
-    vm.client_schedule = { disabled: true }
+    vm.parameters_uploader = {
+        url: 'payment2/upload_designs',
+        removeAfterUpload: true,
+        headers: {
+            'X-CSRF-TOKEN': $http.defaults.headers.post['X-CSRFToken']
+        },
+        queueLimit: 1,
+        filters: [{
+            name: 'imageFilter',
+            fn: function(item /*{File|FileLikeObject}*/, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        }]
+    };
 
-    vm.Inint = _ =>
+    vm.uploader = new FileUploader(vm.parameters_uploader);
+
+    vm.ResetUser = _ => 
     {
-        if(vm.payment.user_slot_id != null){
-            $http.post('payment2/get_client', {user_slot_id: vm.payment.user_slot_id})
-            .success(res => {
-                console.log(res)
-                if(res.status){
-                    vm.payment.client.name = res.data.name 
-                    vm.payment.client.phone = res.data.phone
-                    vm.payment.client.init_slot = res.data.init_slot
-                    vm.payment.client.final_slot = res.data.final_slot
-                    vm.payment.client.date = res.data.date
-                    vm.payment.client.schedule = res.data.init_slot+' - '+res.data.final_slot
-                } else {
-                    swal('¡Atención!', res.msg, 'warning')
-                }
-            }).error(res => {
-                console.log(res)
-                swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
-            })
-        } else {
-            console.log('nada')
+        vm.user.modal = {
+            loader: false,
+            title: 'Crear '+vm.label_module,
+            phone: '',
+            first_name: '',
+            last_name: '',
+            email: '',
+            group_id: 4,
+            active: true
         }
-    }//vm.Inint
+    }//ResetUser
 
     vm.SwitchClientFill = _ =>
     {
         vm.payment.fill_type = !vm.payment.fill_type
 
-        if(vm.payment.fill_type == 1){
-            vm.cita_date.disabled = false
+        if(vm.payment.fill_type == 1) vm.client_name.disabled = true
+        if (vm.payment.fill_type == 0) vm.client_name.disabled = false
 
-            vm.client_name.disabled = true
-            vm.client_date.disabled = true
-            vm.client_schedule.disabled = true
-            
-        } 
-        if (vm.payment.fill_type == 0) {
-            vm.cita_date.disabled = true
-
-            vm.client_name.disabled = false
-            vm.client_date.disabled = false
-            vm.client_schedule.disabled = false
-        }
-
-        vm.payment.user_slot_id = null
+        vm.payment.client.id = null
         vm.payment.client.name = ''
         vm.payment.client.phone = ''
-        vm.payment.client.init_slot = ''
-        vm.payment.client.final_slot = ''
-        vm.payment.client.date = ''
-        vm.payment.client.schedule = ''
     }//vm.SwitchClientFill
 
-    vm.GetCitasByDate = _ => 
+    vm.OpenSelectClient = _ =>
     {
-        $('#slot_citas_modal').modal('toggle')
-        vm.cita.loader = true
-        let dd = vm.cita.date        
-        let d = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate())
-        let final_date = dd.getFullYear()+'-'+('0'+(dd.getMonth()+1)).slice(-2)+'-'+('0'+dd.getDate()).slice(-2)
-        $http.post('citas/get_citas', { day: d.getDay(), date: final_date })
-        .success(res =>{
+        $('#client_modal').modal('toggle')
+        vm.client.loader = true
+        $http.post('payment2/get_client')
+        .success(res => {
             console.log(res)
+            vm.client.loader = false
             if(res.status){
-                vm.cita.loader = false
-                vm.cita.slots_list = res.data
-                for(let i in vm.cita.slots_list){
-                    vm.cita.slots_list[i].init_slot = vm.ConvertTo12H(vm.cita.slots_list[i].init_slot)
-                    vm.cita.slots_list[i].final_slot = vm.ConvertTo12H(vm.cita.slots_list[i].final_slot)
-                }
+                vm.client.list = res.data
             } else {
-                swal('¡Atención!', res.msg, 'warning')
+                swal('¡Atención', res.msg, 'warning')
             }
-        }).error(res=>{
-            console.log(res)
-            vm.cita.loader = false
+        }).error(res => {
+            vm.client.loader = false
             swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
         })
-    }//
+    }//vm.OpenSelectClient
 
     vm.SelectClient = ind =>
     {
-        console.log(vm.cita.slots_list[ind])
-        vm.payment.user_slot_id = vm.cita.slots_list[ind].user_slot_id 
-        vm.payment.client.name = vm.cita.slots_list[ind].client_name 
-        vm.payment.client.phone = vm.cita.slots_list[ind].phone
-        vm.payment.client.init_slot = vm.cita.slots_list[ind].init_slot
-        vm.payment.client.final_slot = vm.cita.slots_list[ind].final_slot
-        vm.payment.client.date = vm.cita.slots_list[ind].date
-        vm.payment.client.schedule = vm.cita.slots_list[ind].init_slot+' - '+vm.cita.slots_list[ind].final_slot
-        $('#slot_citas_modal').modal('toggle')
-        vm.cita.date = null
-        vm.cita.slots_list = {}
+        vm.payment.client.id = vm.client.list[ind].id
+        vm.payment.client.name = vm.client.list[ind].first_name+' '+vm.client.list[ind].last_name
+        vm.payment.client.email = vm.client.list[ind].email
+        vm.payment.client.phone = vm.client.list[ind].phone
+        vm.client.list = {}
+        $('#client_modal').modal('toggle')
     }//vm.SelectClient
 
     vm.CancelSelectClient = _ =>
     {
-        vm.cita.slots_list = {}
-        vm.cita.date = null
-        $('#slot_citas_modal').modal('toggle')
+        vm.client.list = {}
+        $('#client_modal').modal('toggle')
     }//vm.CancelSelectClient
+
+    vm.ApplyAdvancePayment = _ =>
+    {
+        if(vm.payment.apply_advance_payment == 2) vm.payment.advance_payment = 0.00
+        vm.UpdateTotal()
+    }//vm.ApplyAdvancePayment
+
+    vm.OnFocusAdvancePayment = _ => document.getElementById("advance_payment").select();
 
     //// SERVICE
     vm.AddServiceModal = _ =>
     {
-        console.log('vm.payment.type_id', vm.payment.type_id)
         $('#add_service_modal').modal('toggle')
         vm.payment.service_loader = true
         $http.post('service/list')
@@ -197,6 +191,12 @@ function index_init($http){
             swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
         })
     }//vm.AddService
+
+    vm.CancelSelectService = _ =>
+    {
+        vm.service_list = []
+        $('#add_service_modal').modal('toggle')
+    }//vm.CancelSelectService
 
     vm.AddServiceToPayment = ind =>
     {
@@ -338,10 +338,17 @@ function index_init($http){
             vm.payment.grand_total = parseFloat(vm.payment.subtotal)
         }
 
+        if(vm.payment.advance_payment == "" ) vm.payment.advance_payment = 0.00
+
+        if(vm.payment.advance_payment > 0){
+            vm.payment.grand_total = parseFloat(vm.payment.grand_total)-parseFloat(vm.payment.advance_payment)
+        }
+
         vm.ChangePaymentWith()
     }//vm.UpdateServiceTotal
 
     vm.ChangeDiscount = _ => vm.UpdateTotal()
+    vm.ChangeAdvancePayment = _ => vm.UpdateTotal()
 
     vm.ChangePaymentWith = _ => 
     {
@@ -360,10 +367,9 @@ function index_init($http){
 
         vm.success_validation = true // Validation success
 
-        if(vm.payment.client.name.length == 0 || vm.payment.client.date.length == 0){
+        if(vm.payment.client.name.length == 0){
             vm.success_validation = false;
             (vm.payment.client.name.length == 0) ? msg = 'El nombre del cliente esta vacio.' : false;
-            (vm.payment.client.date.length == 0) ? msg = 'La fecha de la cita esta vacia.' : false;
         }
 
         if(vm.payment.service_list.length == 0 && vm.payment.product_list.length == 0){
@@ -371,15 +377,58 @@ function index_init($http){
             msg = 'Seleccione un servicio o un producto.'
         }
 
+        if(vm.payment.client.email.length > 0){
+            if(!vm.ValidateEmail(vm.payment.client.email)){
+                vm.success_validation = false
+                msg = 'Correo electronico no valido.'
+            }
+        }
+
+        // VALIDATION FILE
+        if(vm.uploader.queue.length > 0){
+            for(i in vm.uploader.queue){
+                if(vm.uploader.queue[i]._file.size >= 7000000){
+                    vm.success_validation = false
+                    msg = 'El archivo solo puede pesar menos de 7 MB.';
+                }
+                let fileName = '';
+                fileName = vm.uploader.queue[i]._file.name.split(".");
+                if(fileName.length > 2){
+                    vm.success_validation = false; 
+                    msg = 'El nombre del archivo no puede contener puntos.'; 
+                    vm.uploader.queue[i].remove();
+                }
+            }
+        }
+
+        if(vm.delivery_date != null){
+            vm.payment.delivery_date = vm.delivery_date.getFullYear()+'-'+('0'+(vm.delivery_date.getMonth()+1)).slice(-2)+'-'+('0'+vm.delivery_date.getDate()).slice(-2)
+        }
+
         if(vm.success_validation){
-            console.log(vm.payment)
+            vm.payment.loader = true
             $http.post('payment2/charge', vm.payment)
             .success(res => {
                 console.log(res)
                 if(res.status){
-                    sessionStorage.removeItem("user_slot_id")
-                    swal('¡Éxito!', res.msg, 'success')
-                    setTimeout(window.location = 'payment2/list', 5000)
+                    let status_response = 200
+                    if(vm.uploader.queue.length > 0){
+                        vm.uploader.onBeforeUploadItem = item => item.formData.push({payment_id: res.payment_id});
+                        vm.uploader.onErrorItem = (status, response) =>{ console.log(response); status_response = status; }
+                        vm.uploader.onCompleteAll = _ =>{
+                            console.log('status_response', status_response)
+                            if(status_response == 200){
+                                swal('¡Éxito!', res.msg, 'success')
+                                setTimeout(window.location = 'payment2/list', 7000)
+                            } else {
+                                swal('¡Éxito!', 'Error desconocido.', 'success')
+                            }
+                        }
+                        vm.uploader.uploadAll();
+                    } else {
+                        swal('¡Éxito!', res.msg, 'success')
+                        setTimeout(window.location = 'payment2/list', 7000)
+                    }
                 } else {
                     vm.payment.loader = false
                     swal('¡Atención!', res.msg, 'warning')
@@ -396,23 +445,13 @@ function index_init($http){
 
     vm.CancelPayment = _ =>
     {
-        vm.cita = {}
-        vm.cita.loader = false
-        vm.cita.date = null
-        vm.cita.slots_list = []
-        vm.cita.selected = null
-    
         vm.payment = {
             fill_type: 1,
             loader: false,
-            user_slot_id: sessionStorage.getItem("user_slot_id"),
             client: {
+                id: null,
                 name: '',
-                phone: '',
-                init_slot: '',
-                final_slot: '',
-                date: '',
-                schedule: ''
+                email: ''
             },
             service_loader: false,
             product_loader: false,
@@ -427,27 +466,59 @@ function index_init($http){
             payment_with: 0,
             exchange: 0
         }
-    
-        vm.cita_date = { disabled: false }
-    
-        vm.client_name = { disabled: true }
-        vm.client_date = { disabled: true }
-        vm.client_schedule = { disabled: true }
     }
 
-    vm.ConvertTo12H = v =>
+    // USER
+
+    vm.OpenModalUsers = _ =>
     {
-        let t = v.split(':')
+        vm.ResetUser()
+        $('#create_user_modal').modal('show')
+    }//vm.OpenModalUsers
 
-        time = ('0'+t[0]).slice(-2)+':'+('0'+t[1]).slice(-2)
+    vm.SaveUser = _ =>
+    {
+        vm.user.modal.loader = true
 
-        time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-      
-        if (time.length > 1) {
-          time = time.slice (1)
-          time[5] = +time[0] < 12 ? 'AM' : 'PM'
-          time[0] = +time[0] % 12 || 12
-        }
-        return time.join ('')
-    }//
+        if(vm.label_module == 'Cliente') vm.user.modal.group_id = 4
+
+        $http.post('user', vm.user.modal)
+        .success(res => {
+            console.log(res)
+            if(res.status){
+                vm.ResetUser()
+                swal('¡Éxito!', res.msg, 'success')
+                $('#create_user_modal').modal('toggle')
+                vm.SetClientPayment(res.client)
+            } else {
+                vm.user.modal.loader = false
+                swal('¡Atención!', res.msg, 'warning')
+            }
+        }).error(res => {
+            console.log(res)
+            vm.user.modal.loader = false
+            swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
+        });
+    }//vm.SaveUser
+
+    vm.SetClientPayment = client =>
+    {
+        vm.payment.client.id = client.id
+        vm.payment.client.name = client.first_name+' '+client.last_name
+        vm.payment.client.email = client.email
+        vm.payment.client.phone = client.phone
+    }//vm.SetClientPayment
+
+    vm.CancelUserModal = _ => 
+    {
+        vm.ResetUser()
+        $('#create_user_modal').modal('toggle')
+    }//vm.CancelUserModal
+
+
+    vm.ValidateEmail = email =>
+    {
+        let regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email) ? true : false;
+    }
 }//index_init
