@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: lolo
+-- Host: localhost    Database: lolo
 -- ------------------------------------------------------
--- Server version	5.7.23
+-- Server version	5.7.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `discounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `discounts` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) COLLATE utf8_spanish2_ci DEFAULT NULL,
@@ -49,7 +49,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `groups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `groups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_spanish2_ci DEFAULT NULL,
@@ -78,7 +78,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `payment_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `payment_types` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_spanish2_ci DEFAULT NULL,
@@ -105,7 +105,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `payments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `payments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -113,6 +113,7 @@ CREATE TABLE `payments` (
   `discount_id` int(11) DEFAULT NULL,
   `subtotal` decimal(20,2) DEFAULT NULL,
   `grand_total` decimal(20,2) DEFAULT NULL,
+  `apply_advance_payment` tinyint(4) DEFAULT '0',
   `advance_payment` decimal(20,2) DEFAULT '0.00',
   `delivery_date` date DEFAULT NULL,
   `payment_with` decimal(20,2) DEFAULT NULL,
@@ -123,11 +124,12 @@ CREATE TABLE `payments` (
   `email` varchar(255) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `phone` varchar(100) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `design_image` varchar(100) COLLATE utf8_spanish2_ci DEFAULT NULL,
+  `status_id` int(11) DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +138,7 @@ CREATE TABLE `payments` (
 
 LOCK TABLES `payments` WRITE;
 /*!40000 ALTER TABLE `payments` DISABLE KEYS */;
-INSERT INTO `payments` VALUES (21,8,1,1,2264.50,2151.28,NULL,NULL,2200.00,-48.72,1244.50,1020.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:19:10','2019-04-10 12:19:10'),(22,10,1,1,2144.50,2037.28,NULL,NULL,2100.00,-62.72,1244.50,900.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:20:45','2019-04-10 12:20:45'),(23,4,2,1,2254.00,2141.30,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Esau Perez Munive','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:24:09','2019-04-10 12:24:09'),(24,10,1,1,2254.00,2141.30,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:24:43','2019-04-10 12:24:43'),(25,8,1,1,2144.50,2037.28,NULL,NULL,2100.00,-62.72,1244.50,900.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:25:09','2019-04-10 12:25:09'),(26,8,2,1,2254.00,2141.30,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:29:10','2019-04-10 12:29:10'),(27,10,2,1,2254.00,2141.30,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 12:30:23','2019-04-10 12:30:23'),(28,4,2,1,1244.50,1182.28,NULL,NULL,0.00,0.00,1244.50,0.00,'Esau Perez Munive','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:20:16','2019-04-10 18:20:16'),(29,NULL,2,NULL,1234.00,1234.00,NULL,NULL,0.00,0.00,1234.00,0.00,'adcda','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:21:56','2019-04-10 18:21:56'),(30,8,1,2,1234.00,1110.60,NULL,NULL,0.00,0.00,1234.00,0.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:27:51','2019-04-10 18:27:51'),(31,NULL,1,1,1234.00,1172.30,NULL,NULL,0.00,0.00,1234.00,0.00,'aqeeq','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:28:55','2019-04-10 18:28:55'),(32,NULL,1,1,1244.50,1182.28,NULL,NULL,0.00,0.00,1244.50,0.00,'scsdwc','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:30:47','2019-04-10 18:30:47'),(33,NULL,1,NULL,1244.50,1244.50,NULL,NULL,0.00,0.00,1244.50,0.00,'cdwewe','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:33:08','2019-04-10 18:33:08'),(34,NULL,2,2,1244.50,1120.05,NULL,NULL,0.00,0.00,1244.50,0.00,'sdsdcsdc','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:34:37','2019-04-10 18:34:37'),(35,NULL,1,NULL,1234.00,1234.00,NULL,NULL,0.00,0.00,1234.00,0.00,'dwcwewe','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:36:07','2019-04-10 18:36:07'),(36,NULL,1,NULL,1234.00,1234.00,NULL,NULL,0.00,0.00,1234.00,0.00,'dvdsdw efwefwf wef','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:37:49','2019-04-10 18:37:49'),(37,10,1,NULL,2254.00,2254.00,NULL,NULL,2300.00,-46.00,1234.00,1020.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:40:42','2019-04-10 18:40:42'),(38,8,2,NULL,2264.50,2264.50,NULL,NULL,2300.00,-35.50,1244.50,1020.00,'Esau Perez',NULL,NULL,NULL,'2019-04-10 18:41:05','2019-04-10 18:41:05'),(39,NULL,1,NULL,2144.50,2144.50,NULL,NULL,2200.00,-55.50,1244.50,900.00,'s<svsssdvsdvsdv','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:46:35','2019-04-10 18:46:35'),(40,4,2,NULL,2144.50,2144.50,NULL,NULL,2200.00,-55.50,1244.50,900.00,'Esau Perez Munive','samuel43_7@hotmail.com',NULL,NULL,'2019-04-10 18:47:01','2019-04-10 18:47:01'),(41,8,1,NULL,2144.50,2144.50,123456.00,NULL,2200.00,-55.50,1244.50,900.00,'Esau Perez','samuel43_7@hotmail.com',NULL,'191_1554940358.png','2019-04-10 18:52:37','2019-04-10 18:52:38');
+INSERT INTO `payments` VALUES (21,8,1,1,2264.50,2151.28,0,NULL,NULL,2200.00,-48.72,1244.50,1020.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:19:10','2019-04-10 12:19:10'),(22,10,1,1,2144.50,2037.28,0,NULL,NULL,2100.00,-62.72,1244.50,900.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:20:45','2019-04-10 12:20:45'),(23,4,2,1,2254.00,2141.30,0,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Esau Perez Munive','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:24:09','2019-04-10 12:24:09'),(24,10,1,1,2254.00,2141.30,0,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:24:43','2019-04-10 12:24:43'),(25,8,1,1,2144.50,2037.28,0,NULL,NULL,2100.00,-62.72,1244.50,900.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:25:09','2019-04-10 12:25:09'),(26,8,2,1,2254.00,2141.30,0,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:29:10','2019-04-10 12:29:10'),(27,10,2,1,2254.00,2141.30,0,NULL,NULL,2200.00,-58.70,1234.00,1020.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 12:30:23','2019-04-10 12:30:23'),(28,4,2,1,1244.50,1182.28,0,NULL,NULL,0.00,0.00,1244.50,0.00,'Esau Perez Munive','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:20:16','2019-04-10 18:20:16'),(29,NULL,2,NULL,1234.00,1234.00,0,NULL,NULL,0.00,0.00,1234.00,0.00,'adcda','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:21:56','2019-04-10 18:21:56'),(30,8,1,2,1234.00,1110.60,0,NULL,NULL,0.00,0.00,1234.00,0.00,'Esau Perez','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:27:51','2019-04-10 18:27:51'),(31,NULL,1,1,1234.00,1172.30,0,NULL,NULL,0.00,0.00,1234.00,0.00,'aqeeq','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:28:55','2019-04-10 18:28:55'),(32,NULL,1,1,1244.50,1182.28,0,NULL,NULL,0.00,0.00,1244.50,0.00,'scsdwc','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:30:47','2019-04-10 18:30:47'),(33,NULL,1,NULL,1244.50,1244.50,0,NULL,NULL,0.00,0.00,1244.50,0.00,'cdwewe','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:33:08','2019-04-10 18:33:08'),(34,NULL,2,2,1244.50,1120.05,0,NULL,NULL,0.00,0.00,1244.50,0.00,'sdsdcsdc','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:34:37','2019-04-10 18:34:37'),(35,NULL,1,NULL,1234.00,1234.00,0,NULL,NULL,0.00,0.00,1234.00,0.00,'dwcwewe','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:36:07','2019-04-10 18:36:07'),(36,NULL,1,NULL,1234.00,1234.00,0,NULL,NULL,0.00,0.00,1234.00,0.00,'dvdsdw efwefwf wef','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:37:49','2019-04-10 18:37:49'),(37,10,1,NULL,2254.00,2254.00,0,NULL,NULL,2300.00,-46.00,1234.00,1020.00,'Carolina Herrera','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:40:42','2019-04-10 18:40:42'),(38,8,2,NULL,2264.50,2264.50,0,NULL,NULL,2300.00,-35.50,1244.50,1020.00,'Esau Perez',NULL,NULL,NULL,1,'2019-04-10 18:41:05','2019-04-10 18:41:05'),(39,NULL,1,NULL,2144.50,2144.50,0,NULL,NULL,2200.00,-55.50,1244.50,900.00,'s<svsssdvsdvsdv','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:46:35','2019-04-10 18:46:35'),(40,4,2,NULL,2144.50,2144.50,0,NULL,NULL,2200.00,-55.50,1244.50,900.00,'Esau Perez Munive','samuel43_7@hotmail.com',NULL,NULL,1,'2019-04-10 18:47:01','2019-04-10 18:47:01'),(41,8,1,NULL,2144.50,2144.50,1,123456.00,NULL,2200.00,-55.50,1244.50,900.00,'Esau Perez','samuel43_7@hotmail.com',NULL,'191_1554940358.png',1,'2019-04-10 18:52:37','2019-04-10 18:52:38'),(42,10,1,4,2264.50,811.60,1,1000.00,'2019-06-30',0.00,0.00,1244.50,1020.00,'Carolina Herrera','filadelfiamedios604@gmail.com','9211334310',NULL,1,'2019-06-20 00:08:07','2019-06-20 00:08:07');
 /*!40000 ALTER TABLE `payments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +148,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `product_payments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `product_payments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `payment_id` int(11) DEFAULT NULL,
@@ -157,7 +159,7 @@ CREATE TABLE `product_payments` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +168,7 @@ CREATE TABLE `product_payments` (
 
 LOCK TABLES `product_payments` WRITE;
 /*!40000 ALTER TABLE `product_payments` DISABLE KEYS */;
-INSERT INTO `product_payments` VALUES (11,21,3,1,1020.00,'2019-04-10 12:19:10','2019-04-10 12:19:10'),(12,22,4,1,900.00,'2019-04-10 12:20:45','2019-04-10 12:20:45'),(13,23,3,1,1020.00,'2019-04-10 12:24:09','2019-04-10 12:24:09'),(14,24,3,1,1020.00,'2019-04-10 12:24:43','2019-04-10 12:24:43'),(15,25,4,1,900.00,'2019-04-10 12:25:09','2019-04-10 12:25:09'),(16,26,3,1,1020.00,'2019-04-10 12:29:10','2019-04-10 12:29:10'),(17,27,3,1,1020.00,'2019-04-10 12:30:23','2019-04-10 12:30:23'),(18,37,3,1,1020.00,'2019-04-10 18:40:42','2019-04-10 18:40:42'),(19,38,3,1,1020.00,'2019-04-10 18:41:05','2019-04-10 18:41:05'),(20,39,4,1,900.00,'2019-04-10 18:46:35','2019-04-10 18:46:35'),(21,40,4,1,900.00,'2019-04-10 18:47:01','2019-04-10 18:47:01'),(22,41,4,1,900.00,'2019-04-10 18:52:37','2019-04-10 18:52:37');
+INSERT INTO `product_payments` VALUES (11,21,3,1,1020.00,'2019-04-10 12:19:10','2019-04-10 12:19:10'),(12,22,4,1,900.00,'2019-04-10 12:20:45','2019-04-10 12:20:45'),(13,23,3,1,1020.00,'2019-04-10 12:24:09','2019-04-10 12:24:09'),(14,24,3,1,1020.00,'2019-04-10 12:24:43','2019-04-10 12:24:43'),(15,25,4,1,900.00,'2019-04-10 12:25:09','2019-04-10 12:25:09'),(16,26,3,1,1020.00,'2019-04-10 12:29:10','2019-04-10 12:29:10'),(17,27,3,1,1020.00,'2019-04-10 12:30:23','2019-04-10 12:30:23'),(18,37,3,1,1020.00,'2019-04-10 18:40:42','2019-04-10 18:40:42'),(19,38,3,1,1020.00,'2019-04-10 18:41:05','2019-04-10 18:41:05'),(20,39,4,1,900.00,'2019-04-10 18:46:35','2019-04-10 18:46:35'),(21,40,4,1,900.00,'2019-04-10 18:47:01','2019-04-10 18:47:01'),(22,41,4,1,900.00,'2019-04-10 18:52:37','2019-04-10 18:52:37'),(23,42,3,1,1020.00,'2019-06-20 00:08:07','2019-06-20 00:08:07');
 /*!40000 ALTER TABLE `product_payments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +178,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `products`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `products` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_spanish2_ci DEFAULT NULL,
@@ -196,7 +198,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (3,'Producto 1',NULL,1020.00,3,'2019-02-26 17:22:47','2019-04-10 18:41:05'),(4,'Produto 2',NULL,900.00,6,'2019-02-26 17:22:55','2019-04-10 18:52:37');
+INSERT INTO `products` VALUES (3,'Producto 1',NULL,1020.00,2,'2019-02-26 17:22:47','2019-06-20 00:08:07'),(4,'Produto 2',NULL,900.00,6,'2019-02-26 17:22:55','2019-04-10 18:52:37');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +208,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `service_payments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `service_payments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `payment_id` int(11) DEFAULT NULL,
@@ -217,7 +219,7 @@ CREATE TABLE `service_payments` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,7 +228,7 @@ CREATE TABLE `service_payments` (
 
 LOCK TABLES `service_payments` WRITE;
 /*!40000 ALTER TABLE `service_payments` DISABLE KEYS */;
-INSERT INTO `service_payments` VALUES (24,24,3,1,1234.00,'2019-04-10 12:24:43','2019-04-10 12:24:43'),(23,23,3,1,1234.00,'2019-04-10 12:24:09','2019-04-10 12:24:09'),(22,22,2,1,1244.50,'2019-04-10 12:20:45','2019-04-10 12:20:45'),(21,21,2,1,1244.50,'2019-04-10 12:19:10','2019-04-10 12:19:10'),(25,25,2,1,1244.50,'2019-04-10 12:25:09','2019-04-10 12:25:09'),(26,26,3,1,1234.00,'2019-04-10 12:29:10','2019-04-10 12:29:10'),(27,27,3,1,1234.00,'2019-04-10 12:30:23','2019-04-10 12:30:23'),(28,28,2,1,1244.50,'2019-04-10 18:20:16','2019-04-10 18:20:16'),(29,29,3,1,1234.00,'2019-04-10 18:21:56','2019-04-10 18:21:56'),(30,30,3,1,1234.00,'2019-04-10 18:27:51','2019-04-10 18:27:51'),(31,31,3,1,1234.00,'2019-04-10 18:28:55','2019-04-10 18:28:55'),(32,32,2,1,1244.50,'2019-04-10 18:30:47','2019-04-10 18:30:47'),(33,33,2,1,1244.50,'2019-04-10 18:33:08','2019-04-10 18:33:08'),(34,34,2,1,1244.50,'2019-04-10 18:34:37','2019-04-10 18:34:37'),(35,35,3,1,1234.00,'2019-04-10 18:36:07','2019-04-10 18:36:07'),(36,36,3,1,1234.00,'2019-04-10 18:37:49','2019-04-10 18:37:49'),(37,37,3,1,1234.00,'2019-04-10 18:40:42','2019-04-10 18:40:42'),(38,38,2,1,1244.50,'2019-04-10 18:41:05','2019-04-10 18:41:05'),(39,39,2,1,1244.50,'2019-04-10 18:46:35','2019-04-10 18:46:35'),(40,40,2,1,1244.50,'2019-04-10 18:47:01','2019-04-10 18:47:01'),(41,41,2,1,1244.50,'2019-04-10 18:52:37','2019-04-10 18:52:37');
+INSERT INTO `service_payments` VALUES (24,24,3,1,1234.00,'2019-04-10 12:24:43','2019-04-10 12:24:43'),(23,23,3,1,1234.00,'2019-04-10 12:24:09','2019-04-10 12:24:09'),(22,22,2,1,1244.50,'2019-04-10 12:20:45','2019-04-10 12:20:45'),(21,21,2,1,1244.50,'2019-04-10 12:19:10','2019-04-10 12:19:10'),(25,25,2,1,1244.50,'2019-04-10 12:25:09','2019-04-10 12:25:09'),(26,26,3,1,1234.00,'2019-04-10 12:29:10','2019-04-10 12:29:10'),(27,27,3,1,1234.00,'2019-04-10 12:30:23','2019-04-10 12:30:23'),(28,28,2,1,1244.50,'2019-04-10 18:20:16','2019-04-10 18:20:16'),(29,29,3,1,1234.00,'2019-04-10 18:21:56','2019-04-10 18:21:56'),(30,30,3,1,1234.00,'2019-04-10 18:27:51','2019-04-10 18:27:51'),(31,31,3,1,1234.00,'2019-04-10 18:28:55','2019-04-10 18:28:55'),(32,32,2,1,1244.50,'2019-04-10 18:30:47','2019-04-10 18:30:47'),(33,33,2,1,1244.50,'2019-04-10 18:33:08','2019-04-10 18:33:08'),(34,34,2,1,1244.50,'2019-04-10 18:34:37','2019-04-10 18:34:37'),(35,35,3,1,1234.00,'2019-04-10 18:36:07','2019-04-10 18:36:07'),(36,36,3,1,1234.00,'2019-04-10 18:37:49','2019-04-10 18:37:49'),(37,37,3,1,1234.00,'2019-04-10 18:40:42','2019-04-10 18:40:42'),(38,38,2,1,1244.50,'2019-04-10 18:41:05','2019-04-10 18:41:05'),(39,39,2,1,1244.50,'2019-04-10 18:46:35','2019-04-10 18:46:35'),(40,40,2,1,1244.50,'2019-04-10 18:47:01','2019-04-10 18:47:01'),(41,41,2,1,1244.50,'2019-04-10 18:52:37','2019-04-10 18:52:37'),(42,42,2,1,1244.50,'2019-06-20 00:08:07','2019-06-20 00:08:07');
 /*!40000 ALTER TABLE `service_payments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +238,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `services` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_spanish2_ci DEFAULT NULL,
@@ -259,12 +261,39 @@ INSERT INTO `services` VALUES (2,'Servicio 2',1244.50,'2019-01-12 01:58:59','201
 UNLOCK TABLES;
 
 --
+-- Table structure for table `statuses`
+--
+
+DROP TABLE IF EXISTS `statuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `statuses` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) COLLATE utf8_spanish2_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `statuses`
+--
+
+LOCK TABLES `statuses` WRITE;
+/*!40000 ALTER TABLE `statuses` DISABLE KEYS */;
+INSERT INTO `statuses` VALUES (1,'Cerrado','2019-06-19 21:36:00','2019-06-19 21:36:00'),(2,'Abierto','2019-06-19 21:36:00','2019-06-19 21:36:00');
+/*!40000 ALTER TABLE `statuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `first_name` varchar(255) COLLATE utf8_spanish2_ci DEFAULT NULL,
@@ -304,4 +333,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-10 19:12:20
+-- Dump completed on 2019-06-20  1:07:30

@@ -45,6 +45,7 @@
         <br />
     </div><!--/col-sm-12-->
 </div><!--/row-->
+
 <div class="row" ng-init = "vm.GetPayments()">
     <div class="col-md-12">
         <div class="card">
@@ -79,9 +80,10 @@
                                     <td>@{{ payment.grand_total | currency }}</td>
                                     <td style="font-size:12px;">@{{ payment.created_at }}</td>
 									<td style="font-size:16px;color: #fa9295; font-weight:600;">@{{ payment.delivery_date }}</td>
-                                    <td>
-                                        <button class = "btn btn-primary btn-xs green" ng-click = "vm.OpenServiceModal($index)"><i class = "fa fa-eye"></i></button>
-                                        <button ng-if = "payment.design_image != null" class = "btn btn-primary btn-xs" ng-click = "vm.OpenDesignImageModal($index)"><i class = "fa fa-picture-o"></i></button>
+                                    <td class = "icon_action">
+                                        <button class = "btn btn-link btn-xs" ng-click = "vm.OpenServiceModal($index)"><i class = "fa fa-eye"></i></button>
+                                        <button ng-if = "payment.design_image != null" class = "btn btn-link btn-xs" ng-click = "vm.OpenDesignImageModal($index)"><i class = "fa fa-picture-o"></i></button>
+                                        <button ng-if = "payment.apply_advance_payment == 1" class = "btn btn-link btn-xs" ng-click = "vm.OpenApplyAdvancePayment($index)"><i class = "fa fa-credit-card"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -111,7 +113,7 @@
     <div class = "modal-dialog" role = "document">
         <div class = "modal-content">
             <div class = "modal-header">
-                <h5 class = "modal-title" id = "add_service_modal_label">Lista de servicios</h5>
+                <h5 class = "modal-title" id = "add_service_modal_label">Información de la venta</h5>
             </div><!--/modal-header-->
             <div class = "modal-body">
 

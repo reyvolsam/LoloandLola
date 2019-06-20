@@ -165,6 +165,7 @@ class Payment2Controller extends Controller
                 $payment->payment_type_id   = $data['type_id'];
                 $payment->discount_id       = $data['discount_id'];
                 $payment->subtotal          = $data['subtotal'];
+                $payment->apply_advance_payment   = $data['apply_advance_payment'];
                 $payment->advance_payment   = $data['advance_payment'];
                 $payment->delivery_date     = $data['delivery_date'];
                 $payment->grand_total       = $data['grand_total'];
@@ -214,7 +215,7 @@ class Payment2Controller extends Controller
 
                     if(count($_FILES) == 0 ){
                         if(!empty($payment->email)){
-                            $this->SendEmailTicket($payment);
+                            //$this->SendEmailTicket($payment);
                         }   
                     }
 
