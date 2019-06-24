@@ -166,6 +166,7 @@ class Payment2Controller extends Controller
                 $payment->discount_id       = $data['discount_id'];
                 $payment->subtotal          = $data['subtotal'];
                 $payment->apply_advance_payment   = $data['apply_advance_payment'];
+                $payment->payments_list     = '[]';
                 $payment->advance_payment   = $data['advance_payment'];
                 $payment->delivery_date     = $data['delivery_date'];
                 $payment->grand_total       = $data['grand_total'];
@@ -178,6 +179,13 @@ class Payment2Controller extends Controller
                 $payment->name          = $data['client']['name'];
                 if(!empty($data['client']['phone'])) $payment->phone         = $data['client']['phone'];
                 if(!empty($data['client']['email'])) $payment->email         = $data['client']['email'];
+
+                if($data['advance_payment'] == $data['grand_total']){
+                    $payment->status_id         = 1;
+                } else {
+                    $payment->status_id         = $data['status_id'];
+                }
+                
 
                 $payment->save();
 
@@ -213,14 +221,13 @@ class Payment2Controller extends Controller
                         }
                     }
 
-                    if(count($_FILES) == 0 ){
-                        if(!empty($payment->email)){
-                            //$this->SendEmailTicket($payment);
-                        }   
-                    }
-
-
                     $this->res['payment_id'] = $payment->id;
+                }
+
+                if(count($_FILES) == 0 ){
+                    if(!empty($payment->email)){
+                        if($payment->status_id == 1) $this->SendEmailTicket($payment);
+                    }   
                 }
 
                 $this->res['status'] = true;

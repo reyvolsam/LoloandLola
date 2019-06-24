@@ -1,7 +1,9 @@
-angular.module('app', ['ui.bootstrap']).controller('appCtrl', ['$http', index_init]);
+angular.module('app', ['ng-currency', 'ui.bootstrap']).controller('appCtrl', ['$http', index_init]);
 
 function index_init($http){
     var vm = this;
+
+    $http.defaults.headers.post['X-CSRFToken'] = $('meta[name="csrf-token"]').attr('content');
 
     vm.list = {
         loader: false,
@@ -41,6 +43,8 @@ function index_init($http){
     }
 
     vm.design_image = '#'
+
+    vm.quantity_payment = 0;
 
     vm.GetPayments = _ =>
     {
@@ -119,5 +123,15 @@ function index_init($http){
     {
         $('#payment_image_modal').modal('toggle')
     }//vm.CloseDesignImage
+
+    vm.OpenApplyAdvancePayment = _ =>
+    {
+        $('#advance_payment_modal').modal('toggle')
+    }//vm.OpenApplyAdvancePayment
+
+    vm.CloseAdvancePayment = _ => 
+    {
+        $('#advance_payment_modal').modal('toggle')
+    } 
 
 }////

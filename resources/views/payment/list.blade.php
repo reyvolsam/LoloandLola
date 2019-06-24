@@ -99,7 +99,6 @@
                         </ul>
                     </nav>
                 </div>
-                
 
             </div><!--/card-body-->
         </div><!--/card-->
@@ -181,6 +180,64 @@
             </div><!--/modal-body-->
             <div class = "modal-footer">
                 <button type = "button" class = "btn btn-danger" ng-click = "vm.CloseDesignImage()">Cerrar</button>
+            </div><!--/modal-footer-->
+        </div><!--/modal-content-->
+    </div><!--/modal-dialog-->
+</div><!--/modal-->
+
+<div class = "modal fade" id = "advance_payment_modal" tabindex = "-1" role = "dialog" data-backdrop = "static" data-keyboard = "false">
+    <div class = "modal-dialog" role = "document">
+        <div class = "modal-content">
+            <div class = "modal-header">
+                <h5 class = "modal-title">Administrar Pagos</h5>
+            </div><!--/modal-header-->
+            <div class = "modal-body">
+                <div class = "form-group col-md-5">
+                    <label for = "quantity_payment">Cantidad</label>
+                    <div class = "input-group">
+                        <div class = "input-group-prepend">
+                            <div class = "input-group-text">$</div>
+                        </div><!--/input-group-prepend-->
+                        <input type = "text" class = "form-control" id = "quantity_payment" name = "quantity_payment" ng-model = "vm.quantity_payment" ng-currency />
+                        <div class="input-group-append">
+                            <button ng-click = "vm.AddQuantityPayment()" class="btn btn-outline-secondary" type="button" id="button-addon2"><i class = "fa fa-plus"></i></button>
+                        </div><!--/input-group-append-->
+                    </div><!--/input-group-->
+                </div><!--/form-group-->
+                
+                <table class = "table justify-content-md-center">
+                    <thead>
+                        <th>#</th>
+                        <th>Cantidad</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><b>TOTAL PAGOS</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><b>Anticipo</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>TOTAL GENERAL</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>RESTA</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div><!--/modal-body-->
+            <div class = "modal-footer">
+                <button type = "button" class = "btn btn-danger" ng-click = "vm.CloseAdvancePayment()">Cerrar</button>
             </div><!--/modal-footer-->
         </div><!--/modal-content-->
     </div><!--/modal-dialog-->

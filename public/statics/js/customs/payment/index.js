@@ -70,6 +70,7 @@ function index_init($http, FileUploader){
         total_product: 0,
         apply_advance_payment: 2,
         advance_payment: 0,
+        status_id: 1,
         delivery_date: '',
         subtotal: 0,
         grand_total: 0,
@@ -406,6 +407,7 @@ function index_init($http, FileUploader){
         }
 
         if(vm.success_validation){
+            (vm.payment.apply_advance_payment = 1) ? vm.payment.status_id = 2 : vm.payment.status_id = 1;
             vm.payment.loader = true
             $http.post('payment2/charge', vm.payment)
             .success(res => {
