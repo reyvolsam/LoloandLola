@@ -6,12 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model{
 
-    
-    public function user_slot()
-    {
-        return $this->belongsTo('App\UsersSlots');
-    }//region()
-
     public function discount()
     {
         return $this->belongsTo('App\Discount');

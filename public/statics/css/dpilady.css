@@ -29,6 +29,11 @@ body {
 }
 .body_int {
   background: #f8f9fe;
+background-color:#fdd7d7;
+background-image: radial-gradient(white 15%, transparent 16%),
+radial-gradient(white 15%, transparent 16%);
+background-size: 60px 60px;
+background-position: 0 0, 30px 30px;
 }
 form label {
   font-size: 0.75em;
@@ -37,7 +42,7 @@ form label {
   border-radius: 1.1em;
 }
 .btn_dpilady {
-  background: #313131;
+  background: #2d1b19;
   color: #f1f1f1;
   transition: all 0.25s ease-in-out;
   -webkit-transition: all 0.25s ease-in-out;
@@ -46,11 +51,12 @@ form label {
   -ms-transition: all 0.25s ease-in-out;
 }
 .btn_dpilady:hover {
-  color: #f1f1f1;
-  background: #202020;
+  color: #2d1b19;
+  background: #fa9295;
+	transform: scale(1.03);
 }
 .login {
-  background: #f1f1f1;
+  background: #fee8e8;
   text-align: center;
   width: 430px;
   color: #666;
@@ -61,7 +67,7 @@ form label {
   top: 50%;
   transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
-  padding: 1.3em 2em;
+  padding: 0.5em 2em 1.3em 2em;
   border-radius: 0.9em;
   box-shadow: 0 1em 1.2em rgba(0, 0, 0, 0.3);
 }
@@ -84,7 +90,7 @@ form label {
 }
 .sidenav {
   position: fixed;
-  background: #313131;
+  background: #2d1b19;
   height: 100%;
   top: 4em;
   width: 250px;
@@ -104,7 +110,7 @@ form label {
     left: 0px;
     width: 250px;
     height: 100%;
-    background: #313131;
+    background: #2d1b19;
     padding: 0;
     transition: all 0.25s ease-in-out;
     -webkit-transition: all 0.25s ease-in-out;
@@ -114,11 +120,11 @@ form label {
   }
 }
 .sidenav .logotipo {
-  padding: 1.7em 0 0.9em 0;
+  padding: 1.7em 0.5em 0.3em 0;
   text-align: center;
 }
 .sidenav .logotipo img {
-  height: 70px;
+  height: 99px;
 }
 .sidenav ul {
   padding: 0;
@@ -128,12 +134,13 @@ form label {
 .sidenav ul li {
   list-style: none;
   display: block;
-  margin: 2em 0;
+  margin: 1.7em 0;
   width: 100%;
 }
 .sidenav ul li a {
+border-radius: 0 1em 1em 0;
   width: 100%;
-  padding: 1.1em 1.8em;
+  padding: 0.9em 1.8em;
   text-decoration: none;
   color: #f1f1f1;
   transition: all 0.25s ease-in-out;
@@ -145,7 +152,8 @@ form label {
   text-transform: uppercase;
 }
 .sidenav ul li a:hover {
-  background: #202020;
+  background: #fa9295;
+border-radius: 0 1em 1em 0;
 }
 .sidenav ul li i {
   font-size: 1.3em;
@@ -238,6 +246,7 @@ form label {
   font-size: 0.9em !important;
 }
 .nav .avatar img {
+border: 2px solid #fa9295;
   border-radius: 50%;
   height: 36px;
 }

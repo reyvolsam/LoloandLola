@@ -7,20 +7,22 @@
 
 	<!-- compatilibdad con webapp iOS -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-title" content="Dpilady">
+	<meta name="apple-mobile-web-app-title" content="Lolo & Lola Boutique">
 	<link rel="apple-touch-icon"  href="{{asset('statics/favicon/logo_dpilady_mini.png') }}">
 
 	<!-- compatilibdad con webapp Android -->
 	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="theme-color" content="#da4469">
-	<meta name="application-name" content="Dpilady">
+	<meta name="theme-color" content="#2c1b19">
+	<meta name="application-name" content="Lolo & Lola Boutique">
 	<link rel="icon" type="image/png" href="{{ asset('statics/favicon/logo_dpilady_mini.png') }}">
 
-	<title>Dpilady ::Depilación Laser::</title>
-	<meta name="description" content="Dpilady, depilación laser y toda para tu belleza">
+	<title>Lolo & Lola Boutique</title>
+	<meta name="description" content="Lolo & Lola Boutique">
 	<meta name="author" description="Nextio"/>
 
 	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('statics/favicon/logo.ico') }}" />
+	
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -50,14 +52,7 @@
 			<li><a href="{{ URL::to('service') }}"><i class="fa fa-briefcase"></i> Servicios</a> </li>
 			<li><a href="{{ URL::to('product') }}"><i class="fa fa-heart"></i> Productos</a> </li>
 			@endif
-			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2)
-			<li><a href="{{ URL::to('dating') }}"><i class="fa fa-calendar"></i>Gestión de Citas</a> </li>
-			@endif
-			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3 || \Auth::getUser()->group_id == 4)
-			<li><a href="{{ URL::to('citas') }}"><i class="fa fa-clock-o"></i>Agendar Cita</a> </li>
-			@endif
 			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3)
-			<li><a href="{{ URL::to('citas/list') }}"><i class="fa fa-calendar-o"></i>Ver Citas</a> </li>
 			<li><a href="{{ URL::to('payment2') }}"><i class="fa fa-credit-card"></i>Pagar</a> </li>
 			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2)
 			<li><a href="{{ URL::to('payment2/list') }}"><i class="fa fa-database"></i>Historial</a> </li>

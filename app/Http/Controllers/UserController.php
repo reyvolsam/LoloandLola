@@ -15,7 +15,7 @@ class UserController extends Controller
 
     private $res = array();
     private $request;
-    private static $generic_password = "Dpilady2019";
+    private static $generic_password = "Lololola19";
 
     function __construct(Request $request)
     {
@@ -105,6 +105,7 @@ class UserController extends Controller
             $data['first_name']     = $this->request->input('first_name');
             $data['last_name']      = $this->request->input('last_name');
             $data['email']          = $this->request->input('email');
+            $data['phone']          = $this->request->input('phone');
             $data['group_id']       = $this->request->input('group_id');
             $data['active']         = $this->request->input('active');
 
@@ -129,9 +130,11 @@ class UserController extends Controller
                             
                             $user->avatar           = 'avatar.png';
                             $user->group_id         = $data['group_id'];
-                            $user->active            = $data['active'];
+                            $user->phone            = $data['phone'];
+                            $user->active           = $data['active'];
                             $user->save();
 
+                            $this->res['client'] = $user;
                             $this->res['msg'] = 'Usuario restaurado correctamente.';
                             $this->res['status'] = true;
                         } else {
@@ -139,12 +142,14 @@ class UserController extends Controller
                             $user->first_name       = $data['first_name'];
                             $user->last_name        = $data['last_name'];
                             $user->email            = $data['email'];
+                            $user->phone            = $data['phone'];
                             $user->password         = Hash::make(self::$generic_password);    
                             $user->avatar           = 'avatar.png';
                             $user->group_id         = $data['group_id'];
                             $user->active           = $data['active'];
                             $user->save();
 
+                            $this->res['client'] = $user;
                             $this->res['msg'] = 'Usuario creado correctamente.';
                             $this->res['status'] = true;
                         }
@@ -157,10 +162,12 @@ class UserController extends Controller
                     $user->first_name       = $data['first_name'];
                     $user->last_name        = $data['last_name'];
                     $user->email            = $data['email'];
+                    $user->phone            = $data['phone'];
                     $user->active           = $data['active'];
                     $user->group_id         = $data['group_id'];                    
                     $user->save();
 
+                    $this->res['client'] = $user;
                     $this->res['msg'] = 'Usuario actualizado correctamente.';
                     $this->res['status'] = true;                    
                 }
@@ -176,9 +183,9 @@ class UserController extends Controller
     public function ResetPassword()
     {
         try{
-            $user_id = $this->request->input('user_id');
-            $new_password = $this->request->input('new_password');
-            $new_password_confirm = $this->request->input('new_password_confirm');
+            $user_id = $this->request->input('id');
+            $new_password = $this->request->input('password');
+            $new_password_confirm = $this->request->input('password_confirm');
 
             $validator = Validator::make([  
                                 'new_password'          => $new_password, 
@@ -195,7 +202,7 @@ class UserController extends Controller
                     $user->password         = Hash::make($new_password);
                     $user->save();
 
-                    $this->res['msg'] = 'Contraseña modificada correctamente.';
+                    $this->res['msg'] = 'Contraseña actualizada correctamente.';
                     $this->res['status'] = true;
                 } else {
                     $this->res['msg'] = 'Las contraseñas deben de coincidir.';
