@@ -339,11 +339,11 @@ function index_init($http, FileUploader){
             vm.payment.grand_total = parseFloat(vm.payment.subtotal)
         }
 
-        if(vm.payment.advance_payment == "" ) vm.payment.advance_payment = 0.00
+        /*if(vm.payment.advance_payment == "" ) vm.payment.advance_payment = 0.00
 
         if(vm.payment.advance_payment > 0){
             vm.payment.grand_total = parseFloat(vm.payment.grand_total)-parseFloat(vm.payment.advance_payment)
-        }
+        }*/
 
         vm.ChangePaymentWith()
     }//vm.UpdateServiceTotal
@@ -411,12 +411,12 @@ function index_init($http, FileUploader){
             }
         }
 
-        if(vm.delivery_date != null){
+        if(vm.delivery_date.length > 0){
             vm.payment.delivery_date = vm.delivery_date.getFullYear()+'-'+('0'+(vm.delivery_date.getMonth()+1)).slice(-2)+'-'+('0'+vm.delivery_date.getDate()).slice(-2)
         }
 
         if(vm.success_validation){
-            (vm.payment.apply_advance_payment = 1) ? vm.payment.status_id = 2 : vm.payment.status_id = 1;
+            (vm.payment.apply_advance_payment == 1) ? vm.payment.status_id = 2 : vm.payment.status_id = 1;
             vm.payment.loader = true
             $http.post('payment2/charge', vm.payment)
             .success(res => {

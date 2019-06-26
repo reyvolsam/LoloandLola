@@ -54,7 +54,8 @@ function index_init($http){
         subtract: 0,
         loader: false,
         finalized_ticket: false,
-        loader_finelize: false
+        loader_finelize: false,
+        ind: null
     }
 
     vm.GetPayments = _ =>
@@ -137,6 +138,7 @@ function index_init($http){
     vm.OpenApplyAdvancePayment = ind =>
     {
         $('#advance_payment_modal').modal('toggle')
+        vm.payment_admin.ind = ind
         vm.payment_admin.payment_id = vm.list.list[ind].id
         vm.payment_admin.payments_list = vm.list.list[ind].payments_list
         vm.payment_admin.advance_payment = vm.list.list[ind].advance_payment
@@ -165,6 +167,8 @@ function index_init($http){
                 if(vm.payment_admin.finalized_ticket == true){
                     vm.payment_admin.loader = true
                 }
+                vm.list.list[vm.payment_admin.ind].finalized_ticket = vm.payment_admin.finalized_ticket
+                
             } else {
                 swal('¡Atención!', res.msg, 'warning')
             }
@@ -172,6 +176,7 @@ function index_init($http){
             console.log(res)
             vm.payment_admin.loader = false
             vm.payment_admin.loader_finelize = false
+            swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
         })
     }//vm.FinelizedTicket
 
@@ -185,6 +190,7 @@ function index_init($http){
                     payment_id: vm.payment_admin.payment_id
                 })
                 .success(res => {
+                    console.log(res)
                     vm.payment_admin.loader = false
                     if(res.status){
                         vm.payment_admin.quantity = 0
@@ -195,7 +201,9 @@ function index_init($http){
                         swal('¡Atención!', res.msg, 'warning')
                     }
                 }).error(res => {
+                    console.log(res)
                     vm.payment_admin.loader = false
+                    swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
                 })
             }
         }//vm.AddPayment   
@@ -218,6 +226,7 @@ function index_init($http){
                     }).error(res =>{
                         console.log(res)
                         vm.payment_admin.loader = false
+                        swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
                     })
                 } else {
                     vm.payment_admin.finalized_ticket = false
@@ -244,8 +253,9 @@ function index_init($http){
                     swal('¡Atención!', res.msg, 'warning')
                 }
             }).error(res => {
-                vm.payment_admin.loader = false
                 console.log(res)
+                vm.payment_admin.loader = false
+                swal('Error', 'Ups! Algo salio mal, recarga de nuevo la pagina y vuelve a intentarlo.', 'error')
             })
             vm.SUMPaymentsList(vm.payment_admin.payments_list)
         }//vm.DeletePayment

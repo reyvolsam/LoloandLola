@@ -189,10 +189,13 @@ class Payment2Controller extends Controller
                 if(!empty($data['client']['phone'])) $payment->phone         = $data['client']['phone'];
                 if(!empty($data['client']['email'])) $payment->email         = $data['client']['email'];
 
-                if($data['advance_payment'] == $data['grand_total']){
+
+
+                if($data['apply_advance_payment'] == 0){
                     $payment->status_id         = 1;
+                    $payment->finelized_ticket  = true;
                 } else {
-                    $payment->status_id         = $data['status_id'];
+                    $payment->status_id         = 2;
                 }
                 
 
@@ -235,7 +238,7 @@ class Payment2Controller extends Controller
 
                 if(count($_FILES) == 0 ){
                     if(!empty($payment->email)){
-                        if($payment->status_id == 1) $this->SendEmailTicket($payment);
+                        //if($payment->status_id == 1) $this->SendEmailTicket($payment);
                     }   
                 }
 
@@ -344,7 +347,7 @@ class Payment2Controller extends Controller
             $payment = Payment::find($payment_id);
 
             if($payment){
-                $this->SendEmailTicket($payment);
+                //$this->SendEmailTicket($payment);
                 $payment->finalized_ticket = true;
                 $payment->save();
 

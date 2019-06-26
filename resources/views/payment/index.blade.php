@@ -200,7 +200,7 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">$</div>
                                 </div><!--/input-group-prepend-->
-                                <input type = "text" class = "form-control" id = "advance_payment" aria-describedby = "advance_payment" ng-model = "vm.payment.advance_payment" ng-change = "vm.ChangeAdvancePayment()" ng-currency ng-focus = "vm.OnFocusAdvancePayment()" ng-blur = "vm.ValidateAdvancePayment()" />
+                                <input type = "text" class = "form-control" id = "advance_payment" aria-describedby = "advance_payment" ng-model = "vm.payment.advance_payment" ng-currency ng-focus = "vm.OnFocusAdvancePayment()" ng-blur = "vm.ValidateAdvancePayment()" />
                             </div><!--/input-group-->
                         </div><!--/form-group-->
                     </div>
