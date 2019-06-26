@@ -69,7 +69,11 @@ Route::group(['middleware'=> 'loginIn'], function () {
 	Route::resource('service', 'ServiceController');
 
 	
-	
+	Route::post('payment2/payment/finelize', 'Payment2Controller@FinelizeTicket');
+	Route::post('payment2/payment/finalizedCheck', 'Payment2Controller@CheckFinalizedTicket');
+	Route::post('payment2/payment/delete', 'Payment2Controller@DeletePayment');
+	Route::post('payment2/payment/add', 'Payment2Controller@AddPayment');
+
 	Route::post('payment2/upload_designs', 'Payment2Controller@UploadDesigns');
 	Route::post('payment2/get_payment_list', 'Payment2Controller@GetPaymentList');
 	Route::post('payment2/charge', 'Payment2Controller@MakeCharge');

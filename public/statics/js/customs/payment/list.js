@@ -44,7 +44,18 @@ function index_init($http){
 
     vm.design_image = '#'
 
-    vm.quantity_payment = 0;
+    vm.payment_admin = {
+        payment_id: null,
+        payments_list: new Array(),
+        quantity: 0,
+        full_payment: 0, 
+        advance_payment: 0,
+        grand_total: 0,
+        subtract: 0,
+        loader: false,
+        finalized_ticket: false,
+        loader_finelize: false
+    }
 
     vm.GetPayments = _ =>
     {
@@ -114,7 +125,6 @@ function index_init($http){
     
     vm.OpenDesignImageModal = ind =>
     {
-        console.log('vm.list.list', vm.list.list[ind])
         vm.design_image = vm.list.list[ind].design_image
         $('#payment_image_modal').modal('toggle')
     }//vm.OpenDesignImageModal
@@ -124,10 +134,152 @@ function index_init($http){
         $('#payment_image_modal').modal('toggle')
     }//vm.CloseDesignImage
 
-    vm.OpenApplyAdvancePayment = _ =>
+    vm.OpenApplyAdvancePayment = ind =>
     {
         $('#advance_payment_modal').modal('toggle')
+        vm.payment_admin.payment_id = vm.list.list[ind].id
+        vm.payment_admin.payments_list = vm.list.list[ind].payments_list
+        vm.payment_admin.advance_payment = vm.list.list[ind].advance_payment
+        vm.payment_admin.grand_total = vm.list.list[ind].grand_total
+        vm.payment_admin.finalized_ticket = vm.list.list[ind].finalized_ticket
+
+        if(vm.payment_admin.finalized_ticket == true){
+            vm.payment_admin.loader = true
+        }
+
+        vm.SUMPaymentsList(vm.payment_admin.payments_list)
     }//vm.OpenApplyAdvancePayment
+
+    vm.FinelizeTicket = _ => 
+    {
+        vm.payment_admin.loader_finelize = true
+        vm.payment_admin.loader = true
+        $http.post('payment/finelize', {payment_id: vm.payment_admin.payment_id})
+        .success(res => {
+            console.log(res)
+            vm.payment_admin.loader = false
+            vm.payment_admin.loader_finelize = false
+            if(res.status){
+                vm.payment_admin.finalized_ticket = res.data
+
+                if(vm.payment_admin.finalized_ticket == true){
+                    vm.payment_admin.loader = true
+                }
+            } else {
+                swal('¡Atención!', res.msg, 'warning')
+            }
+        }).error(res => {
+            console.log(res)
+            vm.payment_admin.loader = false
+            vm.payment_admin.loader_finelize = false
+        })
+    }//vm.FinelizedTicket
+
+        vm.AddQuantityPayment = _ =>
+        {
+            if(vm.CheckQuantity()){
+                vm.payment_admin.loader = true
+                $http.post('payment/add', 
+                {
+                    quantity: vm.payment_admin.quantity, 
+                    payment_id: vm.payment_admin.payment_id
+                })
+                .success(res => {
+                    vm.payment_admin.loader = false
+                    if(res.status){
+                        vm.payment_admin.quantity = 0
+                        vm.payment_admin.payments_list = res.data
+                        vm.SUMPaymentsList(vm.payment_admin.payments_list)
+                        vm.FinalizedTicket()
+                    } else {
+                        swal('¡Atención!', res.msg, 'warning')
+                    }
+                }).error(res => {
+                    vm.payment_admin.loader = false
+                })
+            }
+        }//vm.AddPayment   
+
+            vm.FinalizedTicket = _ =>
+            {
+                let result = false
+
+                if(vm.payment_admin.subtract == 0){
+                    vm.payment_admin.loader = true
+                    $http.post('payment/finalizedCheck', {payment_id: vm.payment_admin.payment_id})
+                    .success(res => {
+                        console.log(res);
+                        vm.payment_admin.loader = false
+                        if(res.status){
+                            vm.payment_admin.finalized_ticket = res.data
+                        } else {
+                            swal('¡Atención!', res.msg, 'warning')
+                        }
+                    }).error(res =>{
+                        console.log(res)
+                        vm.payment_admin.loader = false
+                    })
+                } else {
+                    vm.payment_admin.finalized_ticket = false
+                }
+                return result
+            }//vm.FinalizeTicket
+
+        vm.DeletePayment = ind =>
+        {
+            console.log('list', vm.payment_admin.payments_list[ind])
+            vm.payment_admin.payments_list.splice(ind, 1)
+            vm.payment_admin.loader = true
+            $http.post('payment/delete', 
+            {
+                payment_id: vm.payment_admin.payment_id,
+                payments_list: vm.payment_admin.payments_list
+            }).success(res => {
+                console.log(res)
+                vm.payment_admin.loader = false
+                if(res.status){
+                    vm.payment_admin.payments_list = res.data
+                    vm.SUMPaymentsList(vm.payment_admin.payments_list)
+                } else {
+                    swal('¡Atención!', res.msg, 'warning')
+                }
+            }).error(res => {
+                vm.payment_admin.loader = false
+                console.log(res)
+            })
+            vm.SUMPaymentsList(vm.payment_admin.payments_list)
+        }//vm.DeletePayment
+
+        vm.CheckQuantity = _ =>
+        {
+            if(vm.payment_admin.quantity > vm.payment_admin.subtract){
+                swal('¡Atención!', 'La cantidad a abonar es mayor a la cantidad restante', 'warning')
+                return false
+            } else {
+                return true
+            }
+        }//vm.CheckQuantity
+
+        vm.SUMPaymentsList = payments_list =>
+        {
+            if(payments_list.length > 0){
+                vm.payment_admin.full_payment = 0
+                for(i in payments_list){
+                    vm.payment_admin.full_payment = (parseFloat(payments_list[i].quantity) + parseFloat(vm.payment_admin.full_payment)).toFixed(2)
+                }
+            } else {
+                vm.payment_admin.full_payment = 0;
+            }
+            vm.CalculateSubtract()
+        }//vm.SUMPaymentsList
+
+        vm.CalculateSubtract = _ =>
+        {
+            let r = parseFloat(vm.payment_admin.full_payment) + parseFloat(vm.payment_admin.advance_payment)
+
+            vm.payment_admin.subtract = (parseFloat(vm.payment_admin.grand_total) - r).toFixed(2);
+
+        }//vm.CalculateSubtract
 
     vm.CloseAdvancePayment = _ => 
     {

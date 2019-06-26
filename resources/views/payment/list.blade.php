@@ -192,52 +192,62 @@
                 <h5 class = "modal-title">Administrar Pagos</h5>
             </div><!--/modal-header-->
             <div class = "modal-body">
-                <div class = "form-group col-md-5">
-                    <label for = "quantity_payment">Cantidad</label>
+                <div class = "form-group col-md-6">
+                    <label for = "quantity_payment">Cantidad a abonar</label>
                     <div class = "input-group">
                         <div class = "input-group-prepend">
                             <div class = "input-group-text">$</div>
                         </div><!--/input-group-prepend-->
-                        <input type = "text" class = "form-control" id = "quantity_payment" name = "quantity_payment" ng-model = "vm.quantity_payment" ng-currency />
+                        <input ng-disabled = "vm.payment_admin.loader" type = "text" class = "form-control" id = "quantity_payment" name = "quantity_payment" ng-model = "vm.payment_admin.quantity" ng-currency />
                         <div class="input-group-append">
-                            <button ng-click = "vm.AddQuantityPayment()" class="btn btn-outline-secondary" type="button" id="button-addon2"><i class = "fa fa-plus"></i></button>
+                            <button ng-if = "vm.payment_admin.loader == false" ng-disabled = "vm.payment_admin.loader" ng-click = "vm.AddQuantityPayment()" class="btn btn-outline-secondary" type="button" id="button-addon2"><i class = "fa fa-plus"></i></button>
+                            <button  ng-if = "vm.payment_admin.loader == true && vm.payment_admin.finalized_ticket == false" class="btn btn-outline-secondary" type = "button" id = "button-addon2"><i ng-if = "vm.payment_admin.loader == true" class = "fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i></button>                            
                         </div><!--/input-group-append-->
                     </div><!--/input-group-->
                 </div><!--/form-group-->
                 
+                <h4>ABONOS</h4>
                 <table class = "table justify-content-md-center">
                     <thead>
                         <th>#</th>
                         <th>Cantidad</th>
                     </thead>
-                    <tbody>
+                    <tbody ng-repeat = "pay in vm.payment_admin.payments_list" ng-init = "cont = $index">
                         <tr>
-                            <td></td>
-                            <td></td>
+                            <td>@{{ cont+1 }}</td>
+                            <td>@{{ pay.quantity | currency }}</td>
+                            <td>
+                                <button ng-disabled = "vm.payment_admin.loader" class="btn btn-outline-danger" ng-click = "vm.DeletePayment($index)"><i class = "fa fa-trash"></i></button>
+                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td><b>TOTAL PAGOS</b></td>
-                            <td></td>
+                            <td><b>@{{ vm.payment_admin.full_payment | currency }}</b></td>
                         </tr>
                         <tr>
                             <td><b>Anticipo</b></td>
-                            <td></td>
+                            <td><b>@{{ vm.payment_admin.advance_payment | currency }}</b></td>
                         </tr>
                         <tr>
-                            <td>TOTAL GENERAL</td>
-                            <td></td>
+                            <td><b>TOTAL GENERAL</b></td>
+                            <td><b>@{{ vm.payment_admin.grand_total | currency }}</b></td>
                         </tr>
                         <tr>
-                            <td>RESTA</td>
-                            <td></td>
+                            <td><b>RESTA</b></td>
+                            <td><b>@{{ vm.payment_admin.subtract | currency }}</b></td>
                         </tr>
                     </tfoot>
                 </table>
             </div><!--/modal-body-->
             <div class = "modal-footer">
-                <button type = "button" class = "btn btn-danger" ng-click = "vm.CloseAdvancePayment()">Cerrar</button>
+                <button ng-disabled = "vm.payment_admin.loader_finelize == true" ng-if = "vm.payment_admin.finalized_ticket == false && vm.payment_admin.subtract == 0" class = "btn btn-primary" ng-click = "vm.FinelizeTicket()"> 
+                    <span ng-if = "vm.payment_admin.loader_finelize == false">Enviar Ticket</span> 
+                    <span ng-if = "vm.payment_admin.loader_finelize == true"><i class = "fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i></span> 
+                </button>
+                <button ng-if = "vm.payment_admin.finalized_ticket == true" type = "button" class = "btn btn-danger" ng-click = "vm.CloseAdvancePayment()">Cerrar</button>
+                <button ng-if = "vm.payment_admin.finalized_ticket == false" ng-disabled = "vm.payment_admin.loader" type = "button" class = "btn btn-danger" ng-click = "vm.CloseAdvancePayment()">Cerrar</button>
             </div><!--/modal-footer-->
         </div><!--/modal-content-->
     </div><!--/modal-dialog-->

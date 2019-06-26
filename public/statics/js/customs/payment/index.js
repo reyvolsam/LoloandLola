@@ -351,6 +351,15 @@ function index_init($http, FileUploader){
     vm.ChangeDiscount = _ => vm.UpdateTotal()
     vm.ChangeAdvancePayment = _ => vm.UpdateTotal()
 
+    vm.ValidateAdvancePayment = _ =>
+    {
+        if(vm.payment.advance_payment > vm.payment.grand_total){
+            vm.payment.advance_payment = 0
+            swal('¡Atención!', 'El anticipo no puede ser mayor al Total', 'warning')
+        }
+        vm.UpdateTotal()
+    }//vm.ValidateAdvancePayment
+
     vm.ChangePaymentWith = _ => 
     {
         if(vm.payment.payment_with > vm.payment.grand_total){

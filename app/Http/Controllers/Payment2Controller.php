@@ -106,6 +106,15 @@ class Payment2Controller extends Controller
                 }
                 $total_pages = ceil($total / $rowsPerPage);
 
+                foreach ($payment_list as $kpl => $vpl) {
+                    if($vpl->payments_list == null){
+                        $vpl->payments_list = [];
+                    } else {
+                        $vpl->payments_list = json_decode($vpl->payments_list);
+                    }
+                }
+
+
                 $this->res['total_pages'] = $total_pages;
                 $this->res['data'] = $payment_list;
                 $this->res['total'] = $total;
@@ -327,6 +336,104 @@ class Payment2Controller extends Controller
 
         return view('payment.ticket', ['request' => $this->request, 'data' => $payment_data, 'date' => $date]);
     }//TicketWeb()
+
+    public function FinelizeTicket()
+    {
+        try {
+            $payment_id = $this->request->input('payment_id');
+            $payment = Payment::find($payment_id);
+
+            if($payment){
+                $this->SendEmailTicket($payment);
+                $payment->finalized_ticket = true;
+                $payment->save();
+
+                $this->res['data'] = $payment->finalized_ticket;
+                $this->res['status'] = true;
+                $this->res['msg'] = 'Ticket enviado correctamente.';
+                
+            } else {
+                $this->res['msg'] = 'La venta no fue encontrada, intentelo mas tarde.';
+            }
+        } catch(\Exception $e) {
+            $this->res['msg'] = 'Error en el sistema.'.$e;
+        }
+        return response()->json($this->res);
+    }//FinelizeTicket()
+
+    public function AddPayment()
+    {
+        try{
+            $payment_id = $this->request->input('payment_id');
+            $quantity = $this->request->input('quantity');
+
+            $payments_list = [];
+
+            $payment = Payment::find($payment_id);
+            if($payment){
+                if($payment->payments_list == null){
+                    $payments_list = [];
+                } else {
+                    $payments_list = json_decode($payment->payments_list, true);
+                }
+
+                array_push($payments_list, array('quantity' => $quantity));
+
+                $payment->payments_list = json_encode($payments_list);
+                $payment->save();
+
+                $this->res['status'] = true;
+                $this->res['msg'] = 'Abono agregado correctamente.';
+                $this->res['data'] = json_decode($payment->payments_list);
+            } else {
+                $this->res['msg'] = 'La venta no fue encontrada, intente mas tarde.';
+            }
+        } catch (\Excpetion $e){
+            $this->res['msg'] = 'Error en el sistema.'.$e;
+        }
+        return response()->json($this->res);
+    }//AddPayment()
+
+    public function CheckFinalizedTicket()
+    {
+        try{
+            $payment_id = $this->request->input('payment_id');
+            $payment = Payment::find($payment_id);
+
+            if($payment){
+                $this->res['data'] = $payment->finalized_ticket;
+                $this->res['status'] = true;
+            } else {
+                $this->res['msg'] = 'La venta no fue encontrada, intente mas tarde.';
+            }
+        } catch(\Excpetion $e){
+            $this->res['msg'] = 'Error en el sistema.'.$e;
+        }
+        return response()->json($this->res);
+    }//CheckFinalizedTicket()
+
+    public function DeletePayment()
+    {
+        try{
+            $payment_id = $this->request->input('payment_id');
+            $payments_list = $this->request->input('payments_list');
+
+            $payment = Payment::find($payment_id);
+            if($payment){
+                $payment->payments_list = json_encode($payments_list);
+                $payment->save();
+
+                $this->res['status'] = true;
+                $this->res['msg'] = 'Abono eliminado correctamente.';
+                $this->res['data'] = json_decode($payment->payments_list);
+            } else {
+                $this->res['msg'] = 'La venta no fue encontrada, intente mas tarde.';
+            }
+        } catch (\Excpetion $e){
+            $this->res['msg'] = 'Error en el sistema.'.$e;
+        }
+        return response()->json($this->res);
+    }//DeletePayment()
 
     /**
      * Show the form for creating a new resource.
