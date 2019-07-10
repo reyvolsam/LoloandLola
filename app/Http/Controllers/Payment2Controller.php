@@ -238,7 +238,7 @@ class Payment2Controller extends Controller
 
                 if(count($_FILES) == 0 ){
                     if(!empty($payment->email)){
-                        //if($payment->status_id == 1) $this->SendEmailTicket($payment);
+                        if($payment->status_id == 1) $this->SendEmailTicket($payment);
                     }   
                 }
 
@@ -347,7 +347,7 @@ class Payment2Controller extends Controller
             $payment = Payment::find($payment_id);
 
             if($payment){
-                //$this->SendEmailTicket($payment);
+                $this->SendEmailTicket($payment);
                 $payment->finalized_ticket = true;
                 $payment->save();
 
