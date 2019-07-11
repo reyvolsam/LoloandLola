@@ -54,7 +54,7 @@
 			@endif
 			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3)
 			<li><a href="{{ URL::to('payment2') }}"><i class="fa fa-credit-card"></i>Pagar</a> </li>
-			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2)
+			@if(\Auth::getUser()->group_id == 1 || \Auth::getUser()->group_id == 2 || \Auth::getUser()->group_id == 3)
 			<li><a href="{{ URL::to('payment2/list') }}"><i class="fa fa-database"></i>Historial</a> </li>
 			@endif
 			@endif
